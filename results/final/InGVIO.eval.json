@@ -1,0 +1,18 @@
+{
+ "name": "InGVIO",
+ "cut_utc": "18:09:40",
+ "end_utc": "19:16:59",
+ "n_window": 4040,
+ "n_solved": 3976,
+ "availability_pct": 98.41584158415841,
+ "hor_lt_1m_pct_of_window": 5.0,
+ "hor_lt_1p5m_pct_of_window": 6.584158415841584,
+ "hor_rms_solved": 1928.5696610935722,
+ "hor_median_solved": 11.920855830923875,
+ "hor_max_solved": 43336.34076931573,
+ "ver_rms_solved": 1237.348707427432,
+ "hor_lt_1m_pct_of_solved": 5.0804828973843055,
+ "hor_lt_1p5m_pct_of_solved": 6.690140845070422,
+ "t_first": 65443.97650241852,
+ "t_last": 69418.95673179626
+}

@@ -1,0 +1,13 @@
+upstream/
+catkin_ws/
+bags/
+results/*.bag
+results/*.bag.active
+results/logs/
+results/ros_home/
+results/partial_run1/
+results/offline_test/
+results/vio_global.csv
+results/vins_output/
+results/full_run.out
+results/offline_test.out

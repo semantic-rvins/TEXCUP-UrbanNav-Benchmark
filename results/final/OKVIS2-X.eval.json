@@ -1,0 +1,18 @@
+{
+ "name": "OKVIS2-X",
+ "cut_utc": "18:09:40",
+ "end_utc": "19:16:59",
+ "n_window": 4040,
+ "n_solved": 4040,
+ "availability_pct": 100.0,
+ "hor_lt_1m_pct_of_window": 31.287128712871286,
+ "hor_lt_1p5m_pct_of_window": 44.975247524752476,
+ "hor_rms_solved": 19.293741788160762,
+ "hor_median_solved": 1.7043472185005906,
+ "hor_max_solved": 69.44043970859379,
+ "ver_rms_solved": 24.188044581337973,
+ "hor_lt_1m_pct_of_solved": 31.287128712871286,
+ "hor_lt_1p5m_pct_of_solved": 44.975247524752476,
+ "t_first": 65380.048,
+ "t_last": 69418.957
+}

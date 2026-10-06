@@ -1,0 +1,18 @@
+{
+ "name": "GVINS",
+ "cut_utc": "18:09:40",
+ "end_utc": "19:16:59",
+ "n_window": 4040,
+ "n_solved": 3664,
+ "availability_pct": 90.6930693069307,
+ "hor_lt_1m_pct_of_window": 22.475247524752476,
+ "hor_lt_1p5m_pct_of_window": 39.33168316831683,
+ "hor_rms_solved": 436.7029397360323,
+ "hor_median_solved": 2.1310335600599535,
+ "hor_max_solved": 19793.246852257158,
+ "ver_rms_solved": 4267.226157526596,
+ "hor_lt_1m_pct_of_solved": 24.781659388646286,
+ "hor_lt_1p5m_pct_of_solved": 43.367903930131,
+ "t_first": 65402.257999897,
+ "t_last": 69418.85700011253
+}

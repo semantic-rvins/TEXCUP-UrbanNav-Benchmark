@@ -1,0 +1,112 @@
+{
+  "method": "InGVIO",
+  "source_run": "results/InGVIO/run_20260911T230052Z",
+  "trajectory_rows": 39733,
+  "reference_point": "ALT1 antenna",
+  "source_trajectory": "results/InGVIO/run_20260911T230052Z/est.csv",
+  "run_status": "completed",
+  "original_phase": "completed",
+  "result_status": "completed",
+  "incomplete_collection": false,
+  "source_artifacts": {
+    "run_manifest.json": {
+      "display_name": "InGVIO",
+      "started_utc": null,
+      "bag": "projects/InGVIO/bags/texcup_ingvio.bag",
+      "bag_bytes": 58103885514,
+      "replay_rate": 1.0,
+      "ros_port": 11957,
+      "source_revision": "eca739e894c656a58625c63ef541c9fc31a77e3b",
+      "implementation_profile": "Upstream sportsfield algorithm (gnss_chi2_test=0, visual_noise=0.18, gnss_strong_reject=1); build/compat and output-only ECEF publisher software patches; TEX-CUP data adapters",
+      "archived_algorithm_patches_applied": false,
+      "patches": {
+        "01-build-cxx17-eigen-feature_tracker-dep.patch": "9fd648f3ff20a45601fb7315c25ec307393f9406e909940e92cb22ba89f6ba82",
+        "02-publish-ecef-odometry.patch": "1f7b945370dc5dfa5e7ac2161474530b6d437aa2ae7b2c219ed584deffcad26c"
+      },
+      "recorded_topic_counts": {
+        "/ingvio_estimator/pose_ecef": 39733,
+        "/ingvio_estimator/pose_spp": 3974,
+        "/ingvio_estimator/pose_w": 40337
+      },
+      "est_rows": 39733,
+      "est_first_utc_sod": 65443.97650241852,
+      "est_last_utc_sod": 69418.95673179626,
+      "evaluation": {
+        "cut_utc": "18:09:40",
+        "end_utc": "19:16:59",
+        "reference": "ALT1 antenna",
+        "lever_t_imu_to_ant_in_b": [
+          -0.61,
+          -0.052,
+          0.01
+        ]
+      },
+      "finished_utc": "2026-09-12T00:28:10.072465+00:00"
+    },
+    "status.json": {
+      "phase": "completed",
+      "message": "Replay and extraction completed",
+      "run_dir": "results/InGVIO/run_20260911T230052Z",
+      "ros_port": 11957,
+      "replay_rate": 1.0,
+      "bag": "projects/InGVIO/bags/texcup_ingvio.bag",
+      "out_bag": "results/InGVIO/run_20260911T230052Z/ingvio_out.bag",
+      "play_returncode": 0,
+      "pose_ecef_count": 39733,
+      "est_rows": 39733,
+      "supervisor_pid": 606870,
+      "updated_utc": "2026-09-12T00:28:11.057432+00:00"
+    },
+    "input_validation.json": {
+      "bag": "projects/InGVIO/bags/texcup_ingvio.bag",
+      "bag_bytes": 58103885514,
+      "topics": {
+        "/cam0/image_raw": {
+          "count": 40372,
+          "msg_type": "sensor_msgs/Image",
+          "first_utc": 1557425380.0477993,
+          "last_utc": 1557429418.9567318,
+          "nondecreasing": true
+        },
+        "/imu0": {
+          "count": 404495,
+          "msg_type": "sensor_msgs/Imu",
+          "first_utc": 1557425375.003,
+          "last_utc": 1557429419.991,
+          "nondecreasing": true
+        },
+        "/ublox_driver/ephem": {
+          "count": 3957,
+          "msg_type": "gnss_comm/GnssEphemMsg",
+          "first_utc": 1557425372.0,
+          "last_utc": 1557425375.9557133,
+          "nondecreasing": true
+        },
+        "/ublox_driver/iono_params": {
+          "count": 131,
+          "msg_type": "gnss_comm/StampedFloat64Array",
+          "first_utc": 1557425379.5,
+          "last_utc": 1557429409.5,
+          "nondecreasing": true
+        },
+        "/ublox_driver/range_meas": {
+          "count": 4041,
+          "msg_type": "gnss_comm/GnssMeasMsg",
+          "first_utc": 1557425380.0,
+          "last_utc": 1557429420.0,
+          "nondecreasing": true
+        }
+      },
+      "checks": {
+        "has_imu": true,
+        "has_image": true,
+        "has_gnss_range": true,
+        "has_gnss_ephem": true,
+        "glonass_excluded": true,
+        "all_topics_nondecreasing": true
+      }
+    }
+  },
+  "display_name": "InGVIO",
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

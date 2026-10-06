@@ -1,0 +1,85 @@
+# IC-GVINS config for TEX-CUP (2019-05-09 Austin).
+# Mono LEFT ('port') camera at native 2048x732 resolution, Lord
+# 3DM-GX5-25 IMU at 100 Hz converted to front-right-down, GNSS = RTKLIB RTK
+# solution (results/RTKLIB/rtklib_demo5.pos) as NavSatFix.
+# Body frame b = IMU front-right-down (IC-GVINS requirement). All extrinsics
+# below were rotated from the RFU body frame (see root METHOD_SETUP_GUIDE.md)
+# with M = [[0,1,0],[1,0,0],[0,0,-1]] (RFU->FRD).
+
+# Output directory
+# The supervisor replaces this with an isolated absolute run path.
+outputpath: "results/gvins_output"
+is_make_outputdir: false
+
+# Time length for GNSS/INS initialization, s (upstream default)
+initlength: 1
+
+# IMU sample rate
+imudatarate: 100
+
+# Consider the Earth rotation
+iswithearth: true
+
+# GNSS lever-arm in IMU body frame (front-right-down), m.
+# ALT1 lever arm = [-0.610, -0.052, 0.01] (RFU)
+# -> FRD [-0.052, -0.610, -0.01]
+antlever: [-0.052, -0.610, -0.01]
+
+# IMU noise parameters, recorded benchmark calibration (g = 9.7937 m/s^2):
+#   arw: gyro_noise_std 0.01 deg/s/sqrt(Hz) * 60      = 0.6  deg/sqrt(hr)
+#   vrw: acc_noise_std 0.1 mg/sqrt(Hz) * g/1e3 * 60   = 0.059 m/s/sqrt(hr)
+#   gbstd: gyro_bias_std 8 deg/hr * 10                = 80 deg/hr
+#   abstd: acc_bias_std 0.5 mg * 7 = 3.5 mg           = 3430 mGal
+#   corrtime: upstream default 1 hr
+imumodel:
+    arw: 0.6        # deg/sqrt(hr)
+    vrw: 0.06       # m/s/sqrt(hr)
+    gbstd: 80.0     # deg/hr
+    abstd: 3430.0   # mGal
+    corrtime: 1.0   # hr
+
+# Artificial outages are disabled; retain any actual input solution gaps.
+isusegnssoutage: false
+gnssoutagetime: 0
+
+# A fixed threshold (STD, m) for GNSS outlier culling (upstream default)
+gnssthreshold: 20
+
+# Use visualization (headless run)
+is_use_visualization: false
+
+# Tracking configurations (upstream defaults)
+track_check_histogram: false
+track_min_parallax: 20
+track_max_interval: 0.5
+track_max_features: 200
+
+# Optimization configurations (upstream defaults)
+reprojection_error_std: 1.5
+optimize_windows_size: 10
+optimize_num_iterations: 20
+optimize_estimate_extrinsic: true
+optimize_estimate_td: true
+
+# Camera parameters
+cam0:
+    # Native texcup_port-camchain.yaml intrinsics
+    intrinsic: [1355.07090197, 1360.08043642, 1013.57243982, 330.36528878]
+
+    # radtan [k1, k2, p1, p2] (distortion is scale-invariant in normalized coords)
+    distortion: [-0.04362915, 0.03696032, 0.00059401, 0.00057094]
+
+    # Native image resolution
+    resolution: [2048, 732]
+
+    # Camera-IMU extrinsic, Pb = q_b_c * Pc + t_b_c, b = FRD.
+    # From the RFU calibration documented in the root METHOD_SETUP_GUIDE.md:
+    #   R_rfu_cam = [[1,0,0],[0,0,1],[0,-1,0]]
+    #   t_rfu_cam = [-0.303, 0.011, 0.033]
+    # rotated to FRD: R_frd_cam = M @ R_rfu_cam, t = M @ t_rfu_cam
+    # q (x, y, z, w)
+    q_b_c: [0.5, 0.5, 0.5, 0.5]
+    t_b_c: [0.011, -0.303, -0.033]
+
+    # The time delay between the IMU and camera, t_i = t_c + td
+    td_b_c: 0.0

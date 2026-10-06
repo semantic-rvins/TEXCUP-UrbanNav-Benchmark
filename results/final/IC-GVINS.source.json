@@ -1,0 +1,226 @@
+{
+  "method": "IC-GVINS",
+  "source_run": "results/IC-GVINS/run_memory_fixes_20260911T223550Z",
+  "trajectory_rows": 32473,
+  "reference_point": "ALT1 antenna",
+  "source_trajectory": "results/IC-GVINS/run_memory_fixes_20260911T223550Z/finalization/est.csv",
+  "run_status": "error",
+  "original_phase": "error",
+  "result_status": "error (partial)",
+  "incomplete_collection": true,
+  "source_artifacts": {
+    "run_manifest.json": {
+      "started_utc": "2026-09-11T22:35:50.910724+00:00",
+      "bag": "projects/IC-GVINS/bags/texcup_icgvins_native.bag",
+      "bag_bytes": 58098160033,
+      "replay_rate": 1.0,
+      "diagnostic_duration": null,
+      "allowed_node_cpus": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "source_revision": "644eed9e02c1239d6788f5b19123559735ca1b9e",
+      "patches": {
+        "03-runtime-diagnostics-and-shutdown.patch": "b9d17ffc6742e0c3920bd45da35512e358d6e322b3e86d9ae992c6a2c9acf311",
+        "04-time-window-bounds.patch": "570a2884e20a40141c18cbef75e95d26831fcd56efa576cf534acb7bea7e178e",
+        "05-preserve-gnss-supported-states.patch": "c0be7bd0d6425999338074de59537705505ed0e13806dea9e90a05a11455396b",
+        "06-remap-prior-state-pointers.patch": "bf543da86fb70976a537786cf9610e8cf209d161dcf144cd6f93f206f427cca5",
+        "07-feature-grid-bounds.patch": "2dcd271fbde560ed9b8a2dfd68387d3392fbc4decc1a7553d96abc591b94de3f",
+        "08-materialize-feature-velocity.patch": "ccb63e81b4f170711de5a116e77c633f262f294495717eb92ad26867c94be3bf"
+      },
+      "implementation_profile": "Upstream initialization and GNSS weighting; diagnostics, time-window bounds, state/prior lifetime, feature-grid bounds, and Eigen temporary-lifetime fixes",
+      "archived_algorithm_patches_applied": false,
+      "evaluation": {
+        "cut_utc": "18:09:40",
+        "end_utc": "19:16:59",
+        "reference": "ALT1"
+      },
+      "commands": [
+        {
+          "name": "roscore",
+          "argv": [
+            "roscore",
+            "-p",
+            "11961"
+          ],
+          "started_utc": "2026-09-11T22:35:50.913529+00:00"
+        },
+        {
+          "name": "icgvins",
+          "argv": [
+            "taskset",
+            "-c",
+            "12,13,14,15",
+            "stdbuf",
+            "-oL",
+            "-eL",
+            "rosrun",
+            "ic_gvins",
+            "ic_gvins_ros",
+            "__name:=ic_gvins_node",
+            "_configfile:=results/IC-GVINS/run_memory_fixes_20260911T223550Z/icgvins_texcup.yaml",
+            "_imu_topic:=/imu0",
+            "_gnss_topic:=/gnss0",
+            "_image_topic:=/cam0/image_raw"
+          ],
+          "started_utc": "2026-09-11T22:35:51.415921+00:00"
+        },
+        {
+          "name": "play",
+          "argv": [
+            "rosbag",
+            "play",
+            "projects/IC-GVINS/bags/texcup_icgvins_native.bag",
+            "--rate",
+            "1.0",
+            "--queue=1000",
+            "-d",
+            "3",
+            "--quiet"
+          ],
+          "started_utc": "2026-09-11T22:35:54.918204+00:00"
+        }
+      ],
+      "thread_environment": {
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "OPENCV_FOR_THREADS_NUM": "4"
+      }
+    },
+    "status.json": {
+      "phase": "error",
+      "started_utc": "2026-09-11T22:35:50.913318+00:00",
+      "supervisor_pid": 3712211,
+      "run_dir": "results/IC-GVINS/run_memory_fixes_20260911T223550Z",
+      "ros_port": 11961,
+      "replay_rate": 1.0,
+      "expected_images": 40372,
+      "images_received": 32639,
+      "images_queued": 32449,
+      "images_initializing": 190,
+      "images_tracked": 32448,
+      "nav_count": 32473,
+      "error_count": 217,
+      "warning_count": 17093,
+      "tracking_lost_count": 28,
+      "keyframes_skipped": 0,
+      "gnss_states_retained": 285,
+      "state_lookup_failure_count": 101,
+      "last_image_utc": 1557428645.309953,
+      "last_tracked_utc": 1557428645.21011,
+      "last_nav_utc": 1557428645.253,
+      "message": "icgvins exited unexpectedly: -11",
+      "updated_utc": "2026-09-11T23:30:32.616478+00:00",
+      "processes": {
+        "roscore": {
+          "pid": 3712280,
+          "returncode": 0
+        },
+        "icgvins": {
+          "pid": 3712304,
+          "returncode": -11
+        },
+        "play": {
+          "pid": 3712343,
+          "returncode": 0
+        }
+      },
+      "tracked_features": 0,
+      "image_to_tracking_lag_s": 0.09984302520751953
+    },
+    "input_validation.json": {
+      "bag": "projects/IC-GVINS/bags/texcup_icgvins_native.bag",
+      "bag_bytes": 58098160033,
+      "bag_mtime_ns": 1789100338085766399,
+      "topics": {
+        "/cam0/image_raw": {
+          "count": 40372,
+          "first_utc": 1557425380.0477993,
+          "last_utc": 1557429418.9567318
+        },
+        "/gnss0": {
+          "count": 4014,
+          "first_utc": 1557425380.0,
+          "last_utc": 1557429419.0
+        },
+        "/imu0": {
+          "count": 404495,
+          "first_utc": 1557425375.003,
+          "last_utc": 1557429419.991
+        }
+      },
+      "checks": {
+        "all_topic_times_monotonic": true,
+        "all_gnss_times_gpst_minus_18": true,
+        "all_gnss_positions_are_unshifted_rtklib_antenna": true,
+        "all_gnss_covariances_are_variances": true,
+        "all_image_times_match_hdf5": true,
+        "sampled_native_pixels_match": true,
+        "all_imu_times_match_raw_utc": true,
+        "sampled_imu_rates_match_frd": true,
+        "frd_lever_and_camera_extrinsic": true
+      },
+      "rtklib_quality_counts_in_window": {
+        "2": 3219,
+        "1": 795,
+        "4": 26
+      },
+      "gnss_epochs_excluded_by_quality": 26,
+      "max_gnss_antenna_ecef_roundtrip_m": 2.3283064365386963e-09
+    },
+    "preparation.json": {
+      "bag": "projects/IC-GVINS/bags/texcup_icgvins_native.bag",
+      "counts": {
+        "imu": 404495,
+        "img": 40372,
+        "gnss": 4014
+      },
+      "start_utc": 1557425380.0,
+      "end_utc": 1557429420.0,
+      "gnss_end_utc": 1557429419.0,
+      "downscale": 1,
+      "data_dir": "data/tex_cup",
+      "rtklib_pos": "results/RTKLIB/rtklib_demo5.pos",
+      "std_by_quality": {
+        "1": [
+          0.05,
+          0.1
+        ],
+        "2": [
+          0.5,
+          1.0
+        ]
+      },
+      "bag_bytes": 58098160033,
+      "bag_mtime_ns": 1789100338085766399,
+      "hdf5": {
+        "path": "data/tex_cup/camera_data/images.h5",
+        "bytes": 80392684365,
+        "mtime_ns": 1762158430000000000
+      }
+    },
+    "finalization.json": {
+      "method": "IC-GVINS",
+      "source_run": "results/IC-GVINS/run_memory_fixes_20260911T223550Z",
+      "finalized_utc": "2026-09-11T23:41:04.191582+00:00",
+      "original_phase": "error",
+      "run_status": "error",
+      "all_processes_exited": true,
+      "scoring": "All 4040 epochs; missing or unconvertible output is unavailable; finite outliers retained",
+      "recovery": {
+        "native_source": "results/IC-GVINS/run_memory_fixes_20260911T223550Z/gvins_output/gvins.nav",
+        "counts": {
+          "native_records_read": 32473,
+          "usable_records": 32473
+        }
+      },
+      "trajectory_rows": 32473,
+      "trajectory_file": "finalization/est.csv"
+    }
+  },
+  "display_name": "IC-GVINS",
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

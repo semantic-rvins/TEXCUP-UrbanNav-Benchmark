@@ -1,0 +1,10 @@
+upstream/
+gnss_comm/
+catkin_ws/
+bags/
+results/*.bag
+results/*.bag.active
+results/gvins_output/
+results/logs/
+results/ros_home/
+results/ros_home_diag/

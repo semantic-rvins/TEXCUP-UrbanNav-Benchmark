@@ -1,0 +1,53 @@
+diff --git a/ic_gvins/ic_gvins/tracking/tracking.cc b/ic_gvins/ic_gvins/tracking/tracking.cc
+index 18dd35a..5fdb734 100644
+--- a/ic_gvins/ic_gvins/tracking/tracking.cc
++++ b/ic_gvins/ic_gvins/tracking/tracking.cc
+@@ -26,6 +26,8 @@
+ #include "common/logging.h"
+ #include "common/rotation.h"
+ 
++#include <algorithm>
++#include <cmath>
+ #include <tbb/tbb.h>
+ #include <yaml-cpp/yaml.h>
+ 
+@@ -593,16 +595,24 @@ void Tracking::featuresDetection(Frame::Ptr &frame, bool ismask) {
+     }
+ 
+     // 计算每个分块已有特征点数量
+-    int col, row;
++    auto count_feature = [&](const cv::Point2f &point) {
++        if (!std::isfinite(point.x) || !std::isfinite(point.y)) {
++            return;
++        }
++        // Integer cell widths can leave an image-edge remainder, and
++        // undistortion can move valid features outside the image. Bound the
++        // floating-point coordinates before converting them to cell indices.
++        const float col = std::max(0.0f, std::min(static_cast<float>(block_cols_ - 1),
++                                                point.x / static_cast<float>(block_indexs_[0].first)));
++        const float row = std::max(0.0f, std::min(static_cast<float>(block_rows_ - 1),
++                                                point.y / static_cast<float>(block_indexs_[0].second)));
++        features_cnts[static_cast<int>(row) * block_cols_ + static_cast<int>(col)]++;
++    };
+     for (const auto &feature : frame->features()) {
+-        col = int(feature.second->keyPoint().x / (float) block_indexs_[0].first);
+-        row = int(feature.second->keyPoint().y / (float) block_indexs_[0].second);
+-        features_cnts[row * block_cols_ + col]++;
++        count_feature(feature.second->keyPoint());
+     }
+     for (auto &pts2d : pts2d_new_) {
+-        col = int(pts2d.x / (float) block_indexs_[0].first);
+-        row = int(pts2d.y / (float) block_indexs_[0].second);
+-        features_cnts[row * block_cols_ + col]++;
++        count_feature(pts2d);
+     }
+ 
+     // 设置感兴趣区域, 没有特征的区域
+@@ -666,6 +676,7 @@ void Tracking::featuresDetection(Frame::Ptr &frame, bool ismask) {
+         velocity_ref_.clear();
+     }
+ 
++    int col, row;
+     for (int k = 0; k < block_cnts_; k++) {
+         col = k % block_cols_;
+         row = k / block_cols_;

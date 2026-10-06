@@ -1,0 +1,18 @@
+{
+ "name": "GICI-RTK",
+ "cut_utc": "18:09:40",
+ "end_utc": "19:16:59",
+ "n_window": 4040,
+ "n_solved": 3907,
+ "availability_pct": 96.70792079207921,
+ "hor_lt_1m_pct_of_window": 77.5990099009901,
+ "hor_lt_1p5m_pct_of_window": 87.42574257425743,
+ "hor_rms_solved": 4.690210847127956,
+ "hor_median_solved": 0.029363483804026782,
+ "hor_max_solved": 176.9974267907894,
+ "ver_rms_solved": 5.5223591148418585,
+ "hor_lt_1m_pct_of_solved": 80.24059380598925,
+ "hor_lt_1p5m_pct_of_solved": 90.40184284617354,
+ "t_first": 65382.0,
+ "t_last": 69419.0
+}

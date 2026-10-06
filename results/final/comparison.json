@@ -1,0 +1,48 @@
+{
+  "methods": [
+    {
+      "id": "RTKLIB",
+      "label": "RTKLIB-EX"
+    },
+    {
+      "id": "GICI-RTK",
+      "label": "GICI-RTK"
+    },
+    {
+      "id": "GICI-RRR",
+      "label": "GICI-RRR"
+    },
+    {
+      "id": "VINS-Fusion",
+      "label": "VINS-Fusion"
+    },
+    {
+      "id": "IC-GVINS",
+      "label": "IC-GVINS"
+    },
+    {
+      "id": "GVINS",
+      "label": "GVINS"
+    },
+    {
+      "id": "InGVIO",
+      "label": "InGVIO"
+    },
+    {
+      "id": "OKVIS2-X",
+      "label": "OKVIS2-X"
+    },
+    {
+      "id": "SeA-RVINS-batch-robust",
+      "label": "SeA-RVINS (batch)"
+    },
+    {
+      "id": "SeA-RVINS-latent-robust",
+      "label": "SeA-RVINS (latent)"
+    },
+    {
+      "id": "SeA-RVINS-scalar-robust",
+      "label": "SeA-RVINS (scalar)"
+    }
+  ]
+}

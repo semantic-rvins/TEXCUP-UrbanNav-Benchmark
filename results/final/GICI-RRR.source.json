@@ -1,0 +1,388 @@
+{
+  "method": "GICI-RRR",
+  "source_run": "results/GICI-RRR/run_20260911T022530Z",
+  "trajectory_rows": 9682,
+  "reference_point": "ALT1 antenna",
+  "source_artifacts": {
+    "run_manifest.json": {
+      "name": "GICI-RRR",
+      "estimator_type": "rtk_imu_camera_rrr",
+      "started_utc": "2026-09-11T02:27:06.100640+00:00",
+      "sensors": [
+        "rover GNSS",
+        "base GNSS",
+        "broadcast nav",
+        "RFU Lord IMU",
+        "2048x732 port mono camera"
+      ],
+      "ground_truth_reference": "ALT1 antenna",
+      "lever_arm_rfu_m": [
+        -0.61,
+        -0.052,
+        0.01
+      ],
+      "evaluation_window_utc": [
+        "18:09:40",
+        "19:16:59"
+      ],
+      "commands": [
+        [
+          "<conda-env:benchmark_gici>/bin/python",
+          "projects/GICI-LIB/loaders/cut_rinex.py",
+          "--in",
+          "data/tex_cup/asterx4_rover.obs",
+          "--out",
+          "results/GICI-RRR/run_20260911T022530Z/inputs/rover_cut.obs",
+          "--cut-gpst",
+          "2019-05-09 18:09:58",
+          "--end-gpst",
+          "2019-05-09 19:17:17"
+        ],
+        [
+          "<conda-env:benchmark_gici>/bin/python",
+          "projects/GICI-LIB/loaders/cut_rinex.py",
+          "--in",
+          "data/tex_cup/asterx4_base_1hz.obs",
+          "--out",
+          "results/GICI-RRR/run_20260911T022530Z/inputs/base_cut.obs",
+          "--cut-gpst",
+          "2019-05-09 18:09:58",
+          "--end-gpst",
+          "2019-05-09 19:17:17"
+        ],
+        [
+          "ldd",
+          "projects/GICI-LIB/upstream-rrr/build/gici_main"
+        ],
+        [
+          "projects/GICI-LIB/upstream-rrr/build/gici_main",
+          "results/GICI-RRR/run_20260911T022530Z/gici_rrr.yaml"
+        ],
+        [
+          "<conda-env:benchmark_gici>/bin/python",
+          "projects/GICI-LIB/loaders/gici_nmea_to_csv.py",
+          "--nmea",
+          "results/GICI-RRR/run_20260911T022530Z/solution.nmea",
+          "--out",
+          "results/GICI-RRR/run_20260911T022530Z/est.csv",
+          "--lever-arm=-0.610,-0.052,0.010",
+          "--enu-origin-lla=30.286665310833229,-97.727419949553195,147.56543260626495"
+        ],
+        [
+          "<conda-env:benchmark_gici>/bin/python",
+          "common/evaluate.py",
+          "--est",
+          "results/GICI-RRR/run_20260911T022530Z/est.csv",
+          "--out",
+          "results/GICI-RRR/run_20260911T022530Z",
+          "--gt",
+          "data/tex_cup/ground_truth.log",
+          "--name",
+          "GICI-RRR",
+          "--cut",
+          "18:09:40",
+          "--end",
+          "19:16:59"
+        ],
+        [
+          "<conda-env:benchmark_gici>/bin/python",
+          "common/summarize_statistics.py",
+          "--results",
+          "results/GICI-RRR/run_20260911T022530Z"
+        ],
+        [
+          "<conda-env:benchmark_gici>/bin/python",
+          "common/calculate_statistics.py",
+          "--results",
+          "results/final",
+          "--collect",
+          "GICI-RRR=results/GICI-RRR/run_20260911T022530Z"
+        ]
+      ],
+      "source_revision": "f2b8579f4fab9dff2b0950b11cc04aefe6d48e3a",
+      "inputs": {
+        "imu": {
+          "path": "projects/GICI-LIB/data_converted/imu_rfu_180940.txt",
+          "bytes": 43655968,
+          "mtime_ns": 1789092613224238182
+        },
+        "images": {
+          "path": "projects/GICI-LIB/data_converted/port_images_180940_full.pack",
+          "bytes": 60524249008,
+          "mtime_ns": 1789092816183651708
+        },
+        "raw_imu": {
+          "path": "data/tex_cup/lord_imu.log",
+          "bytes": 54568194,
+          "mtime_ns": 1765146802277444576
+        },
+        "run_imu": {
+          "path": "results/GICI-RRR/run_20260911T022530Z/inputs/imu_rfu.txt",
+          "n_epochs": 403995,
+          "first_utc_unix": 1557425380.003,
+          "last_utc_unix": 1557429419.991
+        },
+        "asterx4_rover.obs": {
+          "path": "data/tex_cup/asterx4_rover.obs",
+          "n_epochs": 5017,
+          "first_gpst_sec": 64938.0,
+          "last_gpst_sec": 69954.0,
+          "first_utc_sec": 64920.0,
+          "last_utc_sec": 69936.0,
+          "observation_types": [
+            "G    8 C1C L1C D1C S1C C2W L2W D2W S2W                      SYS / # / OBS TYPES",
+            "R    8 C1C L1C D1C S1C C2C L2C D2C S2C                      SYS / # / OBS TYPES",
+            "E    8 C1C L1C D1C S1C C7Q L7Q D7Q S7Q                      SYS / # / OBS TYPES",
+            "C    4 C2I L2I D2I S2I                                      SYS / # / OBS TYPES"
+          ],
+          "base_position_header": [
+            "-741205.0262 -5462376.8743  3197933.6654                  APPROX POSITION XYZ"
+          ]
+        },
+        "rover_cut.obs": {
+          "path": "results/GICI-RRR/run_20260911T022530Z/inputs/rover_cut.obs",
+          "n_epochs": 4040,
+          "first_gpst_sec": 65398.0,
+          "last_gpst_sec": 69437.0,
+          "first_utc_sec": 65380.0,
+          "last_utc_sec": 69419.0,
+          "observation_types": [
+            "G    8 C1C L1C D1C S1C C2W L2W D2W S2W                      SYS / # / OBS TYPES",
+            "R    8 C1C L1C D1C S1C C2C L2C D2C S2C                      SYS / # / OBS TYPES",
+            "E    8 C1C L1C D1C S1C C7Q L7Q D7Q S7Q                      SYS / # / OBS TYPES",
+            "C    4 C2I L2I D2I S2I                                      SYS / # / OBS TYPES"
+          ],
+          "base_position_header": [
+            "-741205.0262 -5462376.8743  3197933.6654                  APPROX POSITION XYZ"
+          ]
+        },
+        "asterx4_base_1hz.obs": {
+          "path": "data/tex_cup/asterx4_base_1hz.obs",
+          "n_epochs": 6550,
+          "first_gpst_sec": 63829.0,
+          "last_gpst_sec": 70378.0,
+          "first_utc_sec": 63811.0,
+          "last_utc_sec": 70360.0,
+          "observation_types": [
+            "G    8 C1C L1C D1C S1C C2W L2W D2W S2W                      SYS / # / OBS TYPES",
+            "R    8 C1C L1C D1C S1C C2C L2C D2C S2C                      SYS / # / OBS TYPES",
+            "E    8 C1C L1C D1C S1C C7Q L7Q D7Q S7Q                      SYS / # / OBS TYPES",
+            "C    4 C2I L2I D2I S2I                                      SYS / # / OBS TYPES"
+          ],
+          "base_position_header": [
+            "-742080.4125 -5462031.7412  3198339.6909                  APPROX POSITION XYZ"
+          ]
+        },
+        "base_cut.obs": {
+          "path": "results/GICI-RRR/run_20260911T022530Z/inputs/base_cut.obs",
+          "n_epochs": 4040,
+          "first_gpst_sec": 65398.0,
+          "last_gpst_sec": 69437.0,
+          "first_utc_sec": 65380.0,
+          "last_utc_sec": 69419.0,
+          "observation_types": [
+            "G    8 C1C L1C D1C S1C C2W L2W D2W S2W                      SYS / # / OBS TYPES",
+            "R    8 C1C L1C D1C S1C C2C L2C D2C S2C                      SYS / # / OBS TYPES",
+            "E    8 C1C L1C D1C S1C C7Q L7Q D7Q S7Q                      SYS / # / OBS TYPES",
+            "C    4 C2I L2I D2I S2I                                      SYS / # / OBS TYPES"
+          ],
+          "base_position_header": [
+            "-742080.4125 -5462031.7412  3198339.6909                  APPROX POSITION XYZ"
+          ]
+        },
+        "brdm1290.19p": {
+          "path": "data/tex_cup/brdm1290.19p"
+        },
+        "ground_truth.log": {
+          "path": "data/tex_cup/ground_truth.log"
+        }
+      },
+      "input_window": {
+        "gnss_start_utc": "18:09:40",
+        "gnss_end_utc": "19:16:59",
+        "imu_end_utc": "19:17:00",
+        "imu_end_padding_s": 1.0
+      },
+      "thread_environment": {
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "termination_reason": "Logged post-file EOF and 30 seconds unchanged output",
+      "final_replay_progress": {
+        "n_gga": 9682,
+        "quality_counts": {
+          "5": 6634,
+          "1": 2170,
+          "4": 878
+        },
+        "last_solution_utc_sec": 69419.941,
+        "last_solution_utc": "19:16:59.941"
+      },
+      "enu_origins": [
+        {
+          "utc_unix": 1557425381.0,
+          "ecef_m": [
+            -741203.155074483,
+            -5462367.624690029,
+            3197929.0592207536
+          ]
+        }
+      ],
+      "warnings_count": 50,
+      "errors_count": 0,
+      "gici_returncode": -15,
+      "enu_origin_lla_deg_m": [
+        30.28666531083323,
+        -97.7274199495532,
+        147.56543260626495
+      ],
+      "finished_utc": "2026-09-11T02:33:02.654731+00:00"
+    },
+    "verification.json": {
+      "run_dir": "results/GICI-RRR/run_20260911T022530Z",
+      "checked_antenna_positions": 9682,
+      "all_gga_positions_have_matching_esa": true,
+      "nmea_valid_checksums": 19364,
+      "first_utc_sec": 65386.393,
+      "last_utc_sec": 69419.941,
+      "lever_arm_rfu_m": [
+        -0.61,
+        -0.052,
+        0.01
+      ],
+      "enu_origin": {
+        "source": "GICI initial SPP origin log",
+        "utc_unix": 1557425381.0,
+        "ecef_m": [
+          -741203.155074483,
+          -5462367.624690029,
+          3197929.0592207536
+        ],
+        "lla_deg_m": [
+          30.28666531083323,
+          -97.7274199495532,
+          147.56543260626495
+        ]
+      },
+      "max_antenna_translation_verification_error_m": 8.590049300767105e-05,
+      "reference_point": "ALT1 antenna; one estimated-attitude lever translation; no GT shift",
+      "n_window": 4040,
+      "n_solved": 3891,
+      "post_file_eof_logged": true,
+      "gici_returncode": -15,
+      "estimator_resets": 25,
+      "logged_error_lines": [],
+      "observed_outlier_signal_counts": {
+        "G|1C": 12981,
+        "G|2W": 4266,
+        "E|7Q": 6434,
+        "E|1C": 5354,
+        "C|2I": 5469,
+        "G|L1": 1254,
+        "G|L2": 584,
+        "E|E5B": 696,
+        "E|E1": 596,
+        "C|B1": 442
+      },
+      "signal_verification_limit": "These are outlier diagnostics, not a complete inventory of accepted factors; measurement-level system_exclude is R"
+    },
+    "status.json": {
+      "phase": "completed",
+      "started_utc": "2026-09-11T02:27:06.100640+00:00",
+      "supervisor_pid": 3069410,
+      "run_dir": "results/GICI-RRR/run_20260911T022530Z",
+      "updated_utc": "2026-09-11T02:33:04.156640+00:00",
+      "gici_pid": 3069780,
+      "n_gga": 9682,
+      "quality_counts": {
+        "5": 6634,
+        "1": 2170,
+        "4": 878
+      },
+      "last_solution_utc_sec": 69419.941,
+      "last_solution_utc": "19:16:59.941",
+      "solution_bytes": 1571391,
+      "idle_seconds": 30.1,
+      "warnings_count": 50,
+      "errors_count": 0,
+      "replay_eof": true,
+      "input_read_positions": {
+        "results/GICI-RRR/run_20260911T022530Z/inputs/rover_cut.obs": {
+          "position": 11533089,
+          "size": 11533089
+        },
+        "results/GICI-RRR/run_20260911T022530Z/inputs/base_cut.obs": {
+          "position": 15194117,
+          "size": 15194117
+        },
+        "data/tex_cup/brdm1290.19p": {
+          "position": 8655543,
+          "size": 8655543
+        },
+        "results/GICI-RRR/run_20260911T022530Z/inputs/imu_rfu.txt": {
+          "position": 38783570,
+          "size": 38783570
+        },
+        "projects/GICI-LIB/data_converted/port_images_180940_full.pack": {
+          "position": 60524249008,
+          "size": 60524249008
+        }
+      },
+      "enu_origins": [
+        {
+          "utc_unix": 1557425381.0,
+          "ecef_m": [
+            -741203.155074483,
+            -5462367.624690029,
+            3197929.0592207536
+          ]
+        }
+      ],
+      "message": "Replay, antenna extraction, statistics and results/final collection completed"
+    },
+    "preparation.json": {
+      "verified_utc": "2026-09-11T02:14:25.422686+00:00",
+      "imu": {
+        "n_epochs": 450061,
+        "first_utc_unix": 1557425380.003,
+        "last_utc_unix": 1557429880.655,
+        "frame": "RFU: [-raw_x, raw_y, -raw_z] for acceleration and gyro",
+        "all_rows_verified": true
+      },
+      "images": {
+        "n_frames": 40372,
+        "width": 2048,
+        "height": 732,
+        "group": "port",
+        "first_utc_unix": 1557425380.0477993,
+        "last_utc_unix": 1557429418.9567318,
+        "all_timestamps_and_headers_verified": true,
+        "pixel_verified_frame_indices": [
+          0,
+          20186,
+          40371
+        ]
+      },
+      "files": {
+        "imu": {
+          "path": "projects/GICI-LIB/data_converted/imu_rfu_180940.txt",
+          "bytes": 43655968,
+          "mtime_ns": 1789092613224238182
+        },
+        "images": {
+          "path": "projects/GICI-LIB/data_converted/port_images_180940_full.pack",
+          "bytes": 60524249008,
+          "mtime_ns": 1789092816183651708
+        },
+        "raw_imu": {
+          "path": "data/tex_cup/lord_imu.log",
+          "bytes": 54568194,
+          "mtime_ns": 1765146802277444576
+        }
+      }
+    },
+    "gici_rrr.yaml": "stream:\n  streamers:\n  - streamer:\n      tag: str_gnss_rov_file\n      type: post-file\n      path: results/GICI-RRR/run_20260911T022530Z/inputs/rover_cut.obs\n      format:\n        type: gnss-rinex\n      latency: 0.0\n  - streamer:\n      tag: str_gnss_ref_file\n      type: post-file\n      path: results/GICI-RRR/run_20260911T022530Z/inputs/base_cut.obs\n      format:\n        type: gnss-rinex\n  - streamer:\n      tag: str_gnss_eph_file\n      type: post-file\n      path: data/tex_cup/brdm1290.19p\n      burst_load: true\n      format:\n        type: gnss-rinex\n  - streamer:\n      tag: str_imu_file\n      type: post-file\n      path: results/GICI-RRR/run_20260911T022530Z/inputs/imu_rfu.txt\n      format:\n        type: imu-text\n  - streamer:\n      tag: str_camera_file\n      type: post-file\n      path: projects/GICI-LIB/data_converted/port_images_180940_full.pack\n      format:\n        type: image-pack\n        width: 2048\n        height: 732\n  - streamer:\n      tag: str_rrr_solution_file\n      input_tags:\n      - fmt_rrr_solution_file\n      type: file\n      path: results/GICI-RRR/run_20260911T022530Z/solution.nmea\n      enable_time_tag: false\n  formators:\n  - formator:\n      io: output\n      tag: fmt_rrr_solution_file\n      type: nmea\n      use_gga: true\n      use_rmc: false\n      use_esa: true\n      use_esd: false\n      talker_id: GP\n  replay:\n    enable: true\n    start_offset: 0.0\nestimate:\n- estimator:\n    tag: est_gnss_imu_camera_rrr\n    type: rtk_imu_camera_rrr\n    input_tags:\n    - str_gnss_rov_file\n    - str_gnss_ref_file\n    - str_gnss_eph_file\n    - str_imu_file\n    - str_camera_file\n    str_gnss_rov_file_roles:\n    - rover\n    str_gnss_ref_file_roles:\n    - reference\n    str_gnss_eph_file_roles:\n    - ephemeris\n    str_imu_file_roles:\n    - major\n    str_camera_file_roles:\n    - mono\n    output_tags:\n    - fmt_rrr_solution_file\n    output_align_tag: str_imu_file\n    output_downsample_rate: 40\n    compute_covariance: false\n    enable_input_align: true\n    input_align_latency: 1.0\n    rtk_imu_camera_rrr_options:\n      max_keyframes: 3\n      min_yaw_std_init_visual: 0.5\n    rtk_options:\n      use_ambiguity_resolution: true\n    gnss_estimator_base_options:\n      use_outlier_rejection: true\n      reject_one_outlier_once: false\n      max_pesudorange_error: 4.0\n      max_phaserange_error: 0.06\n      max_doppler_error: 0.5\n      gnss_common:\n        system_exclude:\n        - R\n        min_elevation: 12.0\n        min_SNR:\n        - 35.0\n        - 30.0\n    gnss_loose_estimator_base_options: null\n    visual_estimator_base_options:\n      feature_error_std: 10.0\n      stable_feature_error_std: 1.0\n      min_observation_stable: 20\n      landmark_outlier_rejection_threshold: 2.0\n    imu_estimator_base_options:\n      imu_parameters:\n        sigma_bg: 0.0003879\n        sigma_ba: 0.0343\n        sigma_g_c: 0.0001745\n        sigma_a_c: 0.000979\n        sigma_gw_c: 2.0881e-06\n        sigma_aw_c: 0.00027361\n      body_to_imu_rotation:\n      - 0.0\n      - 0.0\n      - 0.0\n      body_to_imu_rotation_std: 5.0\n      car_motion: true\n      car_motion_min_velocity: 3.0\n      car_motion_max_anguler_velocity: 5.0\n    estimator_base_options:\n      max_iteration: 5\n      num_threads: 4\n      max_solver_time: 0.03\n      verbose_output: true\n      solver_type: dense_schur\n      trust_region_strategy_type: dogleg\n      log_intermediate_data: true\n      log_intermediate_data_directory: results/GICI-RRR/run_20260911T022530Z/logs\n    ambiguity_resolution_options:\n      system_exclude:\n      - R\n      min_percentage_fixation_uwl: 1.0\n      min_percentage_fixation_wl: 0.9\n      min_percentage_fixation_nl: 0.9\n      ratio: 2.0\n    gnss_imu_initializer_options:\n      max_iteration: 30\n      num_threads: 4\n      max_solver_time: 0.5\n      gnss_extrinsics:\n      - -0.61\n      - -0.052\n      - 0.01\n      gnss_extrinsics_initial_std:\n      - 0.0\n      - 0.0\n      - 0.0\n      time_window_length_slow_motion: 0.05\n      time_window_length_dynamic_motion: 0.5\n      min_acceleration: 0.5\n    feature_handler_options:\n      max_features_per_frame: 100\n      max_n_kfs: 30\n      kfselect_min_numkfs: 30\n      kfselect_min_disparity: 10.0\n      kfselect_min_dist_metric: 0.5\n      kfselect_min_angle: 5.0\n      kfselect_min_dt: 1.0\n      detector:\n        cell_size: 40\n      initialization: null\n      camera_parameters:\n        label: texcup-port\n        cameras:\n        - camera:\n            label: cam0\n            image_width: 2048\n            image_height: 732\n            type: pinhole\n            intrinsics:\n              cols: 1\n              rows: 4\n              data:\n              - 1355.07090197\n              - 1360.08043642\n              - 1013.57243982\n              - 330.36528878\n            distortion:\n              type: radial-tangential\n              parameters:\n                cols: 1\n                rows: 4\n                data:\n                - -0.04362915\n                - 0.03696032\n                - 0.00059401\n                - 0.00057094\n          T_B_C:\n            cols: 4\n            rows: 4\n            data:\n            - 1.0\n            - 0.0\n            - 0.0\n            - -0.303\n            - 0.0\n            - 0.0\n            - 1.0\n            - 0.011\n            - 0.0\n            - -1.0\n            - 0.0\n            - 0.033\n            - 0.0\n            - 0.0\n            - 0.0\n            - 1.0\nlogging:\n  enable: true\n  min_log_level: 0\n  log_to_stderr: true\n  file_directory: results/GICI-RRR/run_20260911T022530Z/logs\n"
+  },
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

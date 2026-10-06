@@ -1,0 +1,45 @@
+{
+  "rtklib": {
+    "repository": "https://github.com/rtklibexplorer/RTKLIB.git",
+    "tag": "v2.5.1",
+    "commit": "62d4677ed8425a4e2748c6d390b500d1afb493fc"
+  },
+  "source_directory": "https://rnl-data.ae.utexas.edu/texcup/2019May09-reference/asterx4/",
+  "rinex_version": "3.04",
+  "time": {
+    "scale": "GPST",
+    "start": "2019-05-09T18:09:58",
+    "end_inclusive": "2019-05-09T19:17:17",
+    "tolerance_seconds": 0.005,
+    "read_ahead_seconds": 1.01
+  },
+  "interval_seconds": 1,
+  "expected_epochs": 4040,
+  "signals": {
+    "G": [
+      "1C",
+      "2W"
+    ],
+    "E": [
+      "1C",
+      "7Q"
+    ],
+    "C": [
+      "2I"
+    ]
+  },
+  "observables": [
+    "C",
+    "L",
+    "D",
+    "S"
+  ],
+  "receiver_options": "",
+  "antenna_note": "Source measurement records contain antenna index 0 (main). Keep receiver_options empty; dataset ALT1 naming is not an SBF AUX selection.",
+  "output_filename": "asterx4_base_1hz.obs",
+  "trace_level": 2,
+  "source_file": {
+    "url": "https://rnl-data.ae.utexas.edu/texcup/2019May09-reference/asterx4/asterx4.sbf",
+    "bytes": 777034292
+  }
+}

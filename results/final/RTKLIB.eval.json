@@ -1,0 +1,18 @@
+{
+ "name": "RTKLIB-EX",
+ "cut_utc": "18:09:40",
+ "end_utc": "19:16:59",
+ "n_window": 4040,
+ "n_solved": 4040,
+ "availability_pct": 100.0,
+ "hor_lt_1m_pct_of_window": 46.13861386138614,
+ "hor_lt_1p5m_pct_of_window": 59.23267326732673,
+ "hor_rms_solved": 4.9459498483588895,
+ "hor_median_solved": 1.1283998049787316,
+ "hor_max_solved": 58.55979887355755,
+ "ver_rms_solved": 9.047554459162145,
+ "hor_lt_1m_pct_of_solved": 46.13861386138614,
+ "hor_lt_1p5m_pct_of_solved": 59.23267326732673,
+ "t_first": 65380.0,
+ "t_last": 69419.0
+}

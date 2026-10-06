@@ -1,0 +1,18 @@
+{
+ "name": "SeA-RVINS (batch)",
+ "cut_utc": "18:09:40",
+ "end_utc": "19:16:59",
+ "n_window": 4040,
+ "n_solved": 4040,
+ "availability_pct": 100.0,
+ "hor_lt_1m_pct_of_window": 97.15346534653466,
+ "hor_lt_1p5m_pct_of_window": 99.62871287128714,
+ "hor_rms_solved": 0.382496122106636,
+ "hor_median_solved": 0.0796625246615039,
+ "hor_max_solved": 2.907004088821422,
+ "ver_rms_solved": 1.2471522474681704,
+ "hor_lt_1m_pct_of_solved": 97.15346534653465,
+ "hor_lt_1p5m_pct_of_solved": 99.62871287128714,
+ "t_first": 65380.0,
+ "t_last": 69419.0
+}

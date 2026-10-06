@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d4eb3f6..3c77146 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,8 +1,8 @@
+-cmake_minimum_required(VERSION 2.8.3)
++cmake_minimum_required(VERSION 3.10)
+ project(gnss_comm)
+ 
+ set(CMAKE_BUILD_TYPE "release")
+-set(CMAKE_CXX_FLAGS "-std=c++11 ")
++set(CMAKE_CXX_FLAGS "-std=c++17 ")
+ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -fPIC")
+ 
+ find_package(catkin REQUIRED COMPONENTS
+diff --git a/src/rinex_helper.cpp b/src/rinex_helper.cpp
+index 9d78b8c..b46878c 100644
+--- a/src/rinex_helper.cpp
++++ b/src/rinex_helper.cpp
+@@ -237,7 +237,9 @@ namespace gnss_comm
+         uint32_t line_offset = 3;
+         for (auto type : date_types)
+         {
+-            std::string field_str = rinex_str.substr(line_offset, 14);
++            // lines can be truncated after the last recorded field
++            std::string field_str = (line_offset < rinex_str.size()) ?
++                rinex_str.substr(line_offset, 14) : std::string(14, ' ');
+             line_offset += 14 + 2;
+             if (field_str.find_first_not_of(' ') == std::string::npos)  continue;
+             const double field_value = stod(field_str);
+@@ -255,7 +257,15 @@ namespace gnss_comm
+             {
+                 freq_idx = freq2idx.at(freq);
+             }
+-            
++
++            // keep per-frequency vectors sized with freqs (upstream indexed
++            // into empty vectors here -> segfault)
++            const size_t nf = obs->freqs.size();
++            if (obs->cp.size()   < nf)  obs->cp.resize(nf, 0);
++            if (obs->psr.size()  < nf)  obs->psr.resize(nf, 0);
++            if (obs->dopp.size() < nf)  obs->dopp.resize(nf, 0);
++            if (obs->CN0.size()  < nf)  obs->CN0.resize(nf, 0);
++
+             if (type.at(0) == 'L')
+                 obs->cp[freq_idx] = field_value;
+             else if (type.at(0) == 'C')

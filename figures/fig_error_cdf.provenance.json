@@ -1,0 +1,283 @@
+{
+  "results_directory": "results/final",
+  "methods": [
+    "RTKLIB",
+    "GICI-RTK",
+    "GICI-RRR",
+    "VINS-Fusion",
+    "IC-GVINS",
+    "GVINS",
+    "InGVIO",
+    "OKVIS2-X",
+    "SeA-RVINS-batch-robust",
+    "SeA-RVINS-latent-robust",
+    "SeA-RVINS-scalar-robust"
+  ],
+  "labels": {
+    "RTKLIB": "RTKLIB-EX",
+    "GICI-RTK": "GICI-RTK",
+    "GICI-RRR": "GICI-RRR",
+    "VINS-Fusion": "VINS-Fusion",
+    "IC-GVINS": "IC-GVINS",
+    "GVINS": "GVINS",
+    "InGVIO": "InGVIO",
+    "OKVIS2-X": "OKVIS2-X",
+    "SeA-RVINS-batch-robust": "SeA-RVINS (batch)",
+    "SeA-RVINS-latent-robust": "SeA-RVINS (latent)",
+    "SeA-RVINS-scalar-robust": "SeA-RVINS (scalar)"
+  },
+  "comparison": {
+    "file": "comparison.json"
+  },
+  "table_selections": {
+    "IC-GVINS": {
+      "end_utc_exclusive": "18:35:00",
+      "reason": "Conservative pre-divergence reporting boundary; not a proven exact failure instant. Earlier recoverable errors are retained without magnitude-based filtering."
+    }
+  },
+  "time_panel_methods": [
+    "SeA-RVINS-batch-robust",
+    "SeA-RVINS-latent-robust",
+    "SeA-RVINS-scalar-robust"
+  ],
+  "excluded_no_vision_methods": [],
+  "window": {
+    "date": "2019-05-09",
+    "start_utc": "18:09:40",
+    "end_utc": "19:16:59",
+    "start_utc_sec": 65380,
+    "end_utc_sec": 69419,
+    "interval_s": 1,
+    "epochs": 4040
+  },
+  "cdf": {
+    "definition": "100 * count(finite horizontal error <= threshold) / 4040",
+    "denominator": 4040,
+    "missing_epochs": "Unavailable; remain in denominator",
+    "x_scale": "log",
+    "x_limits_m": [
+      1e-05,
+      100000.0
+    ],
+    "reference_lines_m": [
+      1.0,
+      1.5
+    ],
+    "zero_error_policy": "Included in CDF at all positive thresholds",
+    "distance_filter": "None; every finite error within the reported time selection is retained"
+  },
+  "source_files": {
+    "RTKLIB": {
+      "file": "RTKLIB.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4040,
+      "full_source_solved_epochs": 4040,
+      "unavailable_epochs": 0,
+      "cdf_endpoint_pct": 100.0,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 58.55979887355755
+    },
+    "GICI-RTK": {
+      "file": "GICI-RTK.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 3907,
+      "full_source_solved_epochs": 3907,
+      "unavailable_epochs": 133,
+      "cdf_endpoint_pct": 96.70792079207921,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 176.9974267907894
+    },
+    "GICI-RRR": {
+      "file": "GICI-RRR.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 3891,
+      "full_source_solved_epochs": 3891,
+      "unavailable_epochs": 149,
+      "cdf_endpoint_pct": 96.31188118811882,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 1122.585502288999
+    },
+    "VINS-Fusion": {
+      "file": "VINS-Fusion.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4036,
+      "full_source_solved_epochs": 4036,
+      "unavailable_epochs": 4,
+      "cdf_endpoint_pct": 99.9009900990099,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 35.85769326801513
+    },
+    "IC-GVINS": {
+      "file": "IC-GVINS.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 1502,
+      "full_source_solved_epochs": 3248,
+      "unavailable_epochs": 2538,
+      "cdf_endpoint_pct": 37.17821782178218,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 30.46987821333951
+    },
+    "GVINS": {
+      "file": "GVINS.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 3664,
+      "full_source_solved_epochs": 3664,
+      "unavailable_epochs": 376,
+      "cdf_endpoint_pct": 90.6930693069307,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 19793.246852257158
+    },
+    "InGVIO": {
+      "file": "InGVIO.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 3976,
+      "full_source_solved_epochs": 3976,
+      "unavailable_epochs": 64,
+      "cdf_endpoint_pct": 98.41584158415841,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 43336.34076931573
+    },
+    "OKVIS2-X": {
+      "file": "OKVIS2-X.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4040,
+      "full_source_solved_epochs": 4040,
+      "unavailable_epochs": 0,
+      "cdf_endpoint_pct": 100.0,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 69.44043970859379
+    },
+    "SeA-RVINS-batch-robust": {
+      "file": "SeA-RVINS-batch-robust.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4040,
+      "full_source_solved_epochs": 4040,
+      "unavailable_epochs": 0,
+      "cdf_endpoint_pct": 100.0,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 2.907004088821422
+    },
+    "SeA-RVINS-latent-robust": {
+      "file": "SeA-RVINS-latent-robust.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4040,
+      "full_source_solved_epochs": 4040,
+      "unavailable_epochs": 0,
+      "cdf_endpoint_pct": 100.0,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 1.5992567075026665
+    },
+    "SeA-RVINS-scalar-robust": {
+      "file": "SeA-RVINS-scalar-robust.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4040,
+      "full_source_solved_epochs": 4040,
+      "unavailable_epochs": 0,
+      "cdf_endpoint_pct": 100.0,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 1.6283380334796556
+    }
+  },
+  "dependencies": {
+    "numpy": "2.5.3",
+    "matplotlib": "3.11.1"
+  },
+  "styles": {
+    "RTKLIB": {
+      "color": "#D55E00",
+      "linestyle": "-",
+      "label": "RTKLIB-EX"
+    },
+    "GICI-RTK": {
+      "color": "#E69F00",
+      "linestyle": "-.",
+      "label": "GICI-RTK"
+    },
+    "GICI-RRR": {
+      "color": "#56B4E9",
+      "linestyle": "-",
+      "label": "GICI-RRR"
+    },
+    "VINS-Fusion": {
+      "color": "#CC79A7",
+      "linestyle": "-",
+      "label": "VINS-Fusion"
+    },
+    "IC-GVINS": {
+      "color": "#333333",
+      "linestyle": ":",
+      "label": "IC-GVINS"
+    },
+    "GVINS": {
+      "color": "#0072B2",
+      "linestyle": "--",
+      "label": "GVINS"
+    },
+    "InGVIO": {
+      "color": [
+        0.8392156862745098,
+        0.15294117647058825,
+        0.1568627450980392,
+        1.0
+      ],
+      "linestyle": "-",
+      "label": "InGVIO"
+    },
+    "OKVIS2-X": {
+      "color": [
+        1.0,
+        0.596078431372549,
+        0.5882352941176471,
+        1.0
+      ],
+      "linestyle": "-",
+      "label": "OKVIS2-X"
+    },
+    "SeA-RVINS-batch-robust": {
+      "color": "#6F4E9C",
+      "linestyle": "-.",
+      "label": "SeA-RVINS (batch)"
+    },
+    "SeA-RVINS-latent-robust": {
+      "color": "#009E73",
+      "linestyle": "-",
+      "label": "SeA-RVINS (latent)"
+    },
+    "SeA-RVINS-scalar-robust": {
+      "color": "#AA8F00",
+      "linestyle": "--",
+      "label": "SeA-RVINS (scalar)"
+    }
+  },
+  "table_selection_source": {
+    "file": "table_selections.json"
+  },
+  "layout": {
+    "mode": "two_panel",
+    "figure_size_inches": [
+      8.3,
+      7.2
+    ],
+    "cdf_axes_width_inches": 7.304,
+    "cdf_axes_height_inches": 2.3563636363636355,
+    "legend_location": "below axes",
+    "explanatory_annotations": true
+  },
+  "time_panel": {
+    "y_scale": "linear",
+    "y_limits_m": [
+      0.0,
+      3.139564415927136
+    ],
+    "missing_epochs": "NaN gaps; no interpolation"
+  },
+  "outputs": {
+    "png": {
+      "file": "figures/fig_error_cdf.png"
+    },
+    "pdf": {
+      "file": "figures/fig_error_cdf.pdf"
+    }
+  },
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

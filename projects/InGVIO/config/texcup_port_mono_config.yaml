@@ -1,0 +1,49 @@
+%YAML:1.0
+# TEX-CUP (2019-05-09 Austin) LEFT 'port' camera for InGVIO mono.
+# Source: camera-calibration-mono/texcup_port-camchain.yaml (kalibr, pinhole radtan,
+# native 2048x732). Images in the bag retain their native size and calibration.
+
+# common parameters
+imu_topic: "/imu0"
+image_topic: "/cam0/image_raw"
+
+# camera calibration
+model_type: PINHOLE
+camera_name: camera
+image_width: 2048
+image_height: 732
+distortion_parameters:
+   k1: -0.04362915
+   k2: 0.03696032
+   p1: 0.00059401
+   p2: 0.00057094
+projection_parameters:
+   fx: 1355.07090197
+   fy: 1360.08043642
+   cx: 1013.57243982
+   cy: 330.36528878
+
+# Extrinsic: camera -> IMU (T_cl2i), documented in the root METHOD_SETUP_GUIDE.md.
+# IMU/body frame is RFU, matching the GVINS bag converter and configuration.
+extrinsicRotation: !!opencv-matrix        # R^{imu}_{cam}
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 1.0,  0.0,  0.0,
+           0.0,  0.0,  1.0,
+           0.0, -1.0,  0.0]
+extrinsicTranslation: !!opencv-matrix     # t^{imu}_{cam}
+   rows: 3
+   cols: 1
+   dt: d
+   data: [-0.303, 0.011, 0.033]
+
+# feature tracker parameters
+max_cnt: 150        # max feature number in feature tracking
+min_dist: 30        # min distance between two features
+freq: 0             # 0 = publish every frame (camera is 10 Hz)
+F_threshold: 1.0    # ransac threshold (pixel)
+show_track: 0       # headless
+show_timer: 0
+timer_warning_thres: 50.0
+equalize: 1

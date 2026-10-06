@@ -1,0 +1,367 @@
+{
+  "method": "VINS-Fusion",
+  "source_run": "results/VINS-Fusion/run_upstream_20260911T073212Z",
+  "trajectory_rows": 20165,
+  "reference_point": "ALT1 antenna",
+  "source_trajectory": "results/VINS-Fusion/run_upstream_20260911T073212Z/est.csv",
+  "run_status": "completed",
+  "original_phase": "completed",
+  "result_status": "completed",
+  "incomplete_collection": false,
+  "source_artifacts": {
+    "run_manifest.json": {
+      "started_utc": "2026-09-11T07:32:12.583640+00:00",
+      "source_revision": "be55a937a57436548ddfb1bd324bc1e9a9e828e0",
+      "bag": "projects/VINS-Fusion/bags/texcup_stereo_native.bag",
+      "bag_bytes": 115951232584,
+      "replay_rate": 1.0,
+      "diagnostic_duration": null,
+      "mode": "stereo + IMU + global_fusion(RTKLIB)",
+      "commands": [
+        {
+          "name": "roscore",
+          "argv": [
+            "roscore",
+            "-p",
+            "11952"
+          ],
+          "started_utc": "2026-09-11T07:32:12.695901+00:00"
+        },
+        {
+          "name": "record",
+          "argv": [
+            "rosbag",
+            "record",
+            "--lz4",
+            "--buffsize=256",
+            "-O",
+            "results/VINS-Fusion/run_upstream_20260911T073212Z/vinsfusion_out.bag",
+            "/vins_estimator/odometry",
+            "/globalEstimator/global_odometry",
+            "__name:=vins_rec"
+          ],
+          "started_utc": "2026-09-11T07:32:13.378242+00:00"
+        },
+        {
+          "name": "vins",
+          "argv": [
+            "stdbuf",
+            "-oL",
+            "-eL",
+            "rosrun",
+            "vins",
+            "vins_node",
+            "results/VINS-Fusion/run_upstream_20260911T073212Z/texcup_stereo_config.yaml"
+          ],
+          "started_utc": "2026-09-11T07:32:13.378741+00:00"
+        },
+        {
+          "name": "global_fusion",
+          "argv": [
+            "stdbuf",
+            "-oL",
+            "-eL",
+            "rosrun",
+            "global_fusion",
+            "global_fusion_node",
+            "_output_csv:=results/VINS-Fusion/run_upstream_20260911T073212Z/vio_global.csv"
+          ],
+          "started_utc": "2026-09-11T07:32:13.386652+00:00"
+        },
+        {
+          "name": "play",
+          "argv": [
+            "rosbag",
+            "play",
+            "projects/VINS-Fusion/bags/texcup_stereo_native.bag",
+            "projects/VINS-Fusion/bags/texcup_gps_upstream.bag",
+            "--rate",
+            "1.0",
+            "--queue=1000",
+            "-d",
+            "3",
+            "--quiet",
+            "--topics",
+            "/imu0",
+            "/cam0/image_raw",
+            "/cam1/image_raw",
+            "/gps_baseline",
+            "/gps_baseline:=/gps"
+          ],
+          "started_utc": "2026-09-11T07:32:16.889489+00:00"
+        },
+        {
+          "name": "verify",
+          "argv": [
+            "<conda-env:benchmark_ros>/bin/python",
+            "projects/VINS-Fusion/loaders/verify_run.py",
+            "--run",
+            "results/VINS-Fusion/run_upstream_20260911T073212Z"
+          ],
+          "started_utc": "2026-09-11T08:40:25.267015+00:00"
+        },
+        {
+          "name": "extract",
+          "argv": [
+            "<conda-env:benchmark_ros>/bin/python",
+            "projects/VINS-Fusion/loaders/extract_est.py",
+            "--bag",
+            "results/VINS-Fusion/run_upstream_20260911T073212Z/vinsfusion_out.bag",
+            "--anchor-log",
+            "results/VINS-Fusion/run_upstream_20260911T073212Z/logs/global_fusion.log",
+            "--after-utc",
+            "1557425384.1494076",
+            "--out",
+            "results/VINS-Fusion/run_upstream_20260911T073212Z/est.csv"
+          ],
+          "started_utc": "2026-09-11T08:40:32.948189+00:00"
+        },
+        {
+          "name": "evaluate",
+          "argv": [
+            "<conda-env:benchmark_ros>/bin/python",
+            "common/evaluate.py",
+            "--est",
+            "results/VINS-Fusion/run_upstream_20260911T073212Z/est.csv",
+            "--out",
+            "results/VINS-Fusion/run_upstream_20260911T073212Z",
+            "--name",
+            "VINS-Fusion",
+            "--gt",
+            "data/tex_cup/ground_truth.log",
+            "--cut",
+            "18:09:40",
+            "--end",
+            "19:16:59"
+          ],
+          "started_utc": "2026-09-11T08:40:33.515848+00:00"
+        },
+        {
+          "name": "statistics",
+          "argv": [
+            "<conda-env:benchmark_ros>/bin/python",
+            "common/summarize_statistics.py",
+            "--results",
+            "results/VINS-Fusion/run_upstream_20260911T073212Z"
+          ],
+          "started_utc": "2026-09-11T08:40:33.836604+00:00"
+        },
+        {
+          "name": "collect_final",
+          "argv": [
+            "<conda-env:benchmark_ros>/bin/python",
+            "common/calculate_statistics.py",
+            "--results",
+            "results/final",
+            "--collect",
+            "VINS-Fusion=results/VINS-Fusion/run_upstream_20260911T073212Z"
+          ],
+          "started_utc": "2026-09-11T08:40:33.888786+00:00"
+        }
+      ],
+      "source_scope": "upstream algorithm settings with build, diagnostics, and unit-rotation software fixes",
+      "gps_bag": "projects/VINS-Fusion/bags/texcup_gps_upstream.bag",
+      "estimator_image_stride": 2,
+      "estimator_first_image_index": 1,
+      "evaluation": {
+        "cut_utc": "18:09:40",
+        "end_utc": "19:16:59",
+        "reference": "ALT1"
+      },
+      "patch_series": [
+        "0001-build-and-origin.patch",
+        "0002-runtime-path-and-diagnostics.patch",
+        "0003-normalize-global-rotations.patch"
+      ],
+      "patches": {
+        "0001-build-and-origin.patch": "8dcfcb2355544859fcb1e730c618c8ed297c8dcab4df068aeac64117a6bbbd45",
+        "0002-runtime-path-and-diagnostics.patch": "98c55158b2b14e928191da0985146701b0bec37f1984ecb3e2b73012cc3bf59d",
+        "0003-normalize-global-rotations.patch": "0e5b35dc363a202606c3f09ba1cc6a9f41ade5af65d03b1f706629c53606f7f1"
+      },
+      "thread_environment": {
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "OPENCV_FOR_THREADS_NUM": "4"
+      },
+      "finished_utc": "2026-09-11T08:40:33.888341+00:00"
+    },
+    "verification.json": {
+      "image_pairs_processed": 40372,
+      "expected_image_pairs": 40372,
+      "estimator_image_candidates": 20186,
+      "estimator_image_stride": 2,
+      "all_pose_times_match_estimator_admission": true,
+      "all_expected_pairs_tracked": true,
+      "first_image_utc": 1557425380.0477993,
+      "last_image_utc": 1557429418.9567318,
+      "median_features": 150.0,
+      "median_stereo_features": 99.0,
+      "pairs_with_stereo_features": 40372,
+      "gps_accepted": 4037,
+      "global_optimization_cycles": 1945,
+      "unusable_optimization_cycles": 0,
+      "first_global_optimization_utc": 1557425384.1494076,
+      "global_initialization_exclusion": "Only odometry strictly after the first completed global alignment is georeferenced.",
+      "resets": 0,
+      "topics": {
+        "/vins_estimator/odometry": {
+          "count": 20176,
+          "first_utc": 1557425382.1487248,
+          "last_utc": 1557429418.9567318,
+          "max_quaternion_norm_error": 4.440892098500626e-16
+        },
+        "/globalEstimator/global_odometry": {
+          "count": 20176,
+          "first_utc": 1557425382.1487248,
+          "last_utc": 1557429418.9567318,
+          "max_quaternion_norm_error": 2.220446049250313e-16
+        }
+      },
+      "note": "Checks establish data processing and output support; they do not establish position accuracy."
+    },
+    "status.json": {
+      "phase": "completed",
+      "started_utc": "2026-09-11T07:32:12.695569+00:00",
+      "supervisor_pid": 3505776,
+      "run_dir": "results/VINS-Fusion/run_upstream_20260911T073212Z",
+      "replay_rate": 1.0,
+      "ros_port": 11952,
+      "warning_count": 1,
+      "error_count": 0,
+      "image_pairs_processed": 40372,
+      "vio_count": 20176,
+      "global_count": 20176,
+      "gps_accepted": 4037,
+      "reset_count": 0,
+      "expected_image_pairs": 40372,
+      "expected_estimator_image_candidates": 20186,
+      "estimator_cadence": "tracks every pair; admits every second pair before initialization losses",
+      "invalid_rotation_count": 0,
+      "max_vio_quaternion_norm_error": 4.440892098500626e-16,
+      "max_global_quaternion_norm_error": 2.220446049250313e-16,
+      "last_imu_utc": 1557429419.991,
+      "last_image_utc": 1557429418.9567318,
+      "last_vio_utc": 1557429418.9567318,
+      "last_global_utc": 1557429418.9567318,
+      "message": "Replay and statistics completed; collected into results/final",
+      "updated_utc": "2026-09-11T08:40:36.074488+00:00",
+      "processes": {
+        "roscore": {
+          "pid": 3505846,
+          "returncode": 0
+        },
+        "record": {
+          "pid": 3505889,
+          "returncode": 0
+        },
+        "vins": {
+          "pid": 3505890,
+          "returncode": -15
+        },
+        "global_fusion": {
+          "pid": 3505897,
+          "returncode": 0
+        },
+        "play": {
+          "pid": 3506027,
+          "returncode": 0
+        },
+        "verify": {
+          "pid": 3615395,
+          "returncode": 0
+        },
+        "extract": {
+          "pid": 3615406,
+          "returncode": 0
+        },
+        "evaluate": {
+          "pid": 3615407,
+          "returncode": 0
+        },
+        "statistics": {
+          "pid": 3615408,
+          "returncode": 0
+        },
+        "collect_final": {
+          "pid": 3615410,
+          "returncode": 0
+        }
+      },
+      "tracked_features": 150,
+      "stereo_features": 101,
+      "image_to_vio_lag_s": 0.0
+    },
+    "input_validation.json": {
+      "bag": "projects/VINS-Fusion/bags/texcup_stereo_native.bag",
+      "bag_bytes": 115951232584,
+      "bag_mtime_ns": 1789096299839073082,
+      "topics": {
+        "/cam0/image_raw": {
+          "count": 40372,
+          "first_utc": 1557425380.0477993,
+          "last_utc": 1557429418.9567318
+        },
+        "/cam1/image_raw": {
+          "count": 40372,
+          "first_utc": 1557425380.0477993,
+          "last_utc": 1557429418.9567318
+        },
+        "/gps": {
+          "count": 4040,
+          "first_utc": 1557425380.0477993,
+          "last_utc": 1557429418.9567318
+        },
+        "/imu0": {
+          "count": 404495,
+          "first_utc": 1557425375.003,
+          "last_utc": 1557429419.991
+        }
+      },
+      "checks": {
+        "all_topic_record_times_monotonic": true,
+        "all_camera_times_match_hdf5": true,
+        "all_imu_times_match_raw_utc": true,
+        "sampled_imu_axes_rfu": true,
+        "first_middle_last_pixels_exact_both_cameras": true,
+        "all_gps_stamps_match_camera_pairs": true,
+        "gps_covariance_uses_consumer_sigma_convention": true,
+        "native_dimensions_and_camera_to_rfu_extrinsics": true
+      },
+      "max_raw_stereo_skew_s": 0.0015974044799804688,
+      "stereo_baseline_m": 0.4976698896061474
+    },
+    "preparation.json": {
+      "bag": "projects/VINS-Fusion/bags/texcup_stereo_native.bag",
+      "counts": {
+        "/imu0": 404495,
+        "/cam0/image_raw": 40372,
+        "/cam1/image_raw": 40372,
+        "/gps": 4040
+      },
+      "start_utc": 1557425380.0,
+      "end_utc": 1557429420.0,
+      "downscale": 1,
+      "stereo_pairs": 40372,
+      "first_image_utc": 1557425380.0477993,
+      "last_image_utc": 1557429418.9567318,
+      "rtklib": "results/RTKLIB/est.csv",
+      "data_dir": "data/tex_cup",
+      "bag_bytes": 115951232584,
+      "bag_mtime_ns": 1789096299839073082
+    },
+    "finalization.json": {
+      "method": "VINS-Fusion",
+      "source_run": "results/VINS-Fusion/run_upstream_20260911T073212Z",
+      "finalized_utc": "2026-09-11T08:44:14.102869+00:00",
+      "original_phase": "completed",
+      "run_status": "completed",
+      "all_processes_exited": true,
+      "scoring": "All 4040 epochs; missing or unconvertible output is unavailable; finite outliers retained",
+      "trajectory_rows": 20165,
+      "recovery": "Completed-run antenna trajectory retained unchanged",
+      "trajectory_file": "est.csv"
+    }
+  },
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

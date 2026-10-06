@@ -1,0 +1,18 @@
+{
+ "name": "VINS-Fusion",
+ "cut_utc": "18:09:40",
+ "end_utc": "19:16:59",
+ "n_window": 4040,
+ "n_solved": 4036,
+ "availability_pct": 99.9009900990099,
+ "hor_lt_1m_pct_of_window": 44.257425742574256,
+ "hor_lt_1p5m_pct_of_window": 57.82178217821782,
+ "hor_rms_solved": 5.1041783053559255,
+ "hor_median_solved": 1.1878814523893504,
+ "hor_max_solved": 35.85769326801513,
+ "ver_rms_solved": 9.152505759961059,
+ "hor_lt_1m_pct_of_solved": 44.301288404360754,
+ "hor_lt_1p5m_pct_of_solved": 57.8790882061447,
+ "t_first": 65384.349,
+ "t_last": 69418.957
+}

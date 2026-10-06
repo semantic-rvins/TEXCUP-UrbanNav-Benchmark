@@ -1,0 +1,12 @@
+diff --git a/ic_gvins/ic_gvins/tracking/tracking.cc b/ic_gvins/ic_gvins/tracking/tracking.cc
+--- a/ic_gvins/ic_gvins/tracking/tracking.cc
++++ b/ic_gvins/ic_gvins/tracking/tracking.cc
+@@ -433,7 +433,7 @@
+         auto mappoint = mappoint_matched_[k];
+ 
+         // 将3D-2D匹配到的landmarks指向到当前帧
+-        auto velocity = (camera_->pixel2cam(pts2d_matched_undis[k]) - camera_->pixel2cam(pts2d_map_undis[k])) / dt;
++        Vector3d velocity = (camera_->pixel2cam(pts2d_matched_undis[k]) - camera_->pixel2cam(pts2d_map_undis[k])) / dt;
+         auto feature  = Feature::createFeature(frame_cur_, {velocity.x(), velocity.y()}, pts2d_matched_undis[k],
+                                                pts2d_matched[k], FEATURE_MATCHED);
+         mappoint->addObservation(feature);

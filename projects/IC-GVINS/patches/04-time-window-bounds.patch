@@ -1,0 +1,209 @@
+diff --git a/ic_gvins/ic_gvins/ic_gvins.cc b/ic_gvins/ic_gvins/ic_gvins.cc
+index 49d8d4c..e5b0e25 100644
+--- a/ic_gvins/ic_gvins/ic_gvins.cc
++++ b/ic_gvins/ic_gvins/ic_gvins.cc
+@@ -446,7 +446,9 @@ void GVINS::runOptimization() {
+                 // Do marginalization
+                 while (map_->isMaximumKeframes()) {
+                     // 边缘化, 移除旧的观测, 按时间对齐到保留的最后一个关键帧
+-                    gvinsMarginalization();
++                    if (!gvinsMarginalization()) {
++                        break;
++                    }
+                 }
+ 
+                 timecosts_[2] = timecost2.costInMillisecond();
+@@ -740,13 +742,20 @@ void GVINS::addNewKeyFrameTimeNode() {
+ 
+         keyframes_.pop();
+ 
++        // Online camera-delay changes can reorder queued frame timestamps.
++        // Create a valid state before admitting the frame into the map.
++        if (!addNewTimeNode(frametime)) {
++            frame->resetKeyFrame();
++            LOGW << "Skip keyframe outside the ordered IMU state window at " << Logging::doubleData(frametime);
++            continue;
++        }
++
+         // 添加关键帧
+         // Add new keyframe time node
+         LOGI << "Insert keyframe " << frame->keyFrameId() << " at " << Logging::doubleData(frame->stamp()) << " with "
+              << frame->unupdatedMappoints().size() << " new mappoints";
+         map_->insertKeyFrame(frame);
+ 
+-        addNewTimeNode(frametime);
+         LOGI << "Add new keyframe time node at " << Logging::doubleData(frametime);
+     }
+ 
+@@ -767,7 +776,7 @@ bool GVINS::removeUnusedTimeNode() {
+         int index = getStateDataIndex(node);
+ 
+         // Exception
+-        if (index < 0) {
++        if (index <= 0 || static_cast<size_t>(index) >= preintegrationlist_.size()) {
+             continue;
+         }
+ 
+@@ -871,6 +880,19 @@ bool GVINS::insertNewGnssTimeNode() {
+             timelist.push_back(timelist_[k]);
+         }
+ 
++        // Validate all replacement intervals before removing existing states.
++        vector<IMU> series;
++        double previous = sta;
++        vector<double> replacement_times{gnss_.time};
++        replacement_times.insert(replacement_times.end(), timelist.begin(), timelist.end());
++        for (double next : replacement_times) {
++            if (!MISC::getImuSeriesFromTo(ins_window_, previous, next, series) || series.size() < 2) {
++                LOGW << "Skip GNSS insertion outside the available IMU window at " << Logging::doubleData(gnss_.time);
++                return true;
++            }
++            previous = next;
++        }
++
+         // Remove back time node
+         size_t num_remove = timelist_.size() - index;
+         for (size_t k = num_remove; k > 0; k--) {
+@@ -894,11 +916,16 @@ bool GVINS::insertNewGnssTimeNode() {
+ void GVINS::addNewGnssTimeNode() {
+     LOGI << "Add new GNSS time node " << Logging::doubleData(gnss_.time);
+ 
+-    addNewTimeNode(gnss_.time);
+-    gnsslist_.push_back(gnss_);
++    if (addNewTimeNode(gnss_.time)) {
++        gnsslist_.push_back(gnss_);
++    }
+ }
+ 
+-void GVINS::addNewTimeNode(double time) {
++bool GVINS::addNewTimeNode(double time) {
++    if (timelist_.empty() || statedatalist_.empty() || !std::isfinite(time) || time <= timelist_.back()) {
++        LOGW << "Skip non-increasing state time " << Logging::doubleData(time);
++        return false;
++    }
+ 
+     vector<IMU> series;
+     IntegrationState state;
+@@ -907,7 +934,9 @@ void GVINS::addNewTimeNode(double time) {
+     // Obtain the IMU samples between the two time nodes
+     double start = timelist_.back();
+     double end   = time;
+-    MISC::getImuSeriesFromTo(ins_window_, start, end, series);
++    if (!MISC::getImuSeriesFromTo(ins_window_, start, end, series) || series.size() < 2) {
++        return false;
++    }
+ 
+     state = Preintegration::stateFromData(statedatalist_.back(), preintegration_options_);
+ 
+@@ -929,6 +958,7 @@ void GVINS::addNewTimeNode(double time) {
+ 
+     statedatalist_.emplace_back(Preintegration::stateToData(state, preintegration_options_));
+     timelist_.push_back(time);
++    return true;
+ }
+ 
+ void GVINS::parametersStatistic() {
+@@ -1425,7 +1455,11 @@ bool GVINS::gvinsMarginalization() {
+     // 对齐到保留的最后一个关键帧, 可能移除多个预积分对象
+     // Align to the last keyframe time
+     auto frame      = map_->keyframes().find(keyframeids[1])->second;
+-    size_t num_marg = getStateDataIndex(frame->stamp());
++    int num_marg = getStateDataIndex(frame->stamp());
++    if (num_marg <= 0) {
++        LOGW << "Cannot marginalize without a matching retained state";
++        return false;
++    }
+ 
+     double last_time = timelist_[num_marg];
+ 
+@@ -1571,7 +1605,7 @@ bool GVINS::gvinsMarginalization() {
+         }
+ 
+         auto ref_frame_pc      = camera_->pixel2cam(mappoint->referenceKeypoint());
+-        size_t ref_frame_index = getStateDataIndex(ref_frame->stamp());
++        int ref_frame_index = getStateDataIndex(ref_frame->stamp());
+         if (ref_frame_index < 0) {
+             continue;
+         }
+@@ -1593,7 +1627,7 @@ bool GVINS::gvinsMarginalization() {
+             }
+ 
+             auto obs_frame_pc      = camera_->pixel2cam(obs_feature->keyPoint());
+-            size_t obs_frame_index = getStateDataIndex(obs_frame->stamp());
++            int obs_frame_index = getStateDataIndex(obs_frame->stamp());
+ 
+             if ((obs_frame_index < 0) || (ref_frame_index == obs_frame_index)) {
+                 LOGE << "Wrong matched mapoint keyframes " << Logging::doubleData(ref_frame->stamp()) << " with "
+@@ -1794,7 +1828,7 @@ vector<ceres::ResidualBlockId> GVINS::addReprojectionFactors(ceres::Problem &pro
+         }
+ 
+         auto ref_frame_pc      = camera_->pixel2cam(mappoint->referenceKeypoint());
+-        size_t ref_frame_index = getStateDataIndex(ref_frame->stamp());
++        int ref_frame_index = getStateDataIndex(ref_frame->stamp());
+         if (ref_frame_index < 0) {
+             continue;
+         }
+@@ -1819,7 +1853,7 @@ vector<ceres::ResidualBlockId> GVINS::addReprojectionFactors(ceres::Problem &pro
+             }
+ 
+             auto obs_frame_pc      = camera_->pixel2cam(obs_feature->keyPoint());
+-            size_t obs_frame_index = getStateDataIndex(obs_frame->stamp());
++            int obs_frame_index = getStateDataIndex(obs_frame->stamp());
+ 
+             if ((obs_frame_index < 0) || (ref_frame_index == obs_frame_index)) {
+                 LOGE << "Wrong matched mapoint keyframes " << Logging::doubleData(ref_frame->stamp()) << " with "
+@@ -1841,6 +1875,9 @@ vector<ceres::ResidualBlockId> GVINS::addReprojectionFactors(ceres::Problem &pro
+ }
+ 
+ int GVINS::getStateDataIndex(double time) {
++    if (timelist_.empty() || !std::isfinite(time)) {
++        return -1;
++    }
+ 
+     size_t index = MISC::getStateDataIndex(timelist_, time, MISC::MINIMUM_TIME_INTERVAL);
+     if (!MISC::isTheSameTimeNode(timelist_[index], time, MISC::MINIMUM_TIME_INTERVAL)) {
+diff --git a/ic_gvins/ic_gvins/ic_gvins.h b/ic_gvins/ic_gvins/ic_gvins.h
+index 77c2ea7..ffce7e2 100644
+--- a/ic_gvins/ic_gvins/ic_gvins.h
++++ b/ic_gvins/ic_gvins/ic_gvins.h
+@@ -80,7 +80,7 @@ private:
+     bool gvinsInitialization();
+     bool gvinsInitializationOptimization();
+ 
+-    void addNewTimeNode(double time);
++    bool addNewTimeNode(double time);
+     void addNewGnssTimeNode();
+     bool insertNewGnssTimeNode();
+     void addNewKeyFrameTimeNode();
+diff --git a/ic_gvins/ic_gvins/misc.cc b/ic_gvins/ic_gvins/misc.cc
+index 18c5388..4b62224 100644
+--- a/ic_gvins/ic_gvins/misc.cc
++++ b/ic_gvins/ic_gvins/misc.cc
+@@ -122,6 +122,9 @@ bool MISC::isTheSameTimeNode(double time0, double time1, double interval) {
+ }
+ 
+ size_t MISC::getStateDataIndex(const std::deque<double> &timelist, double time, double interval) {
++    if (timelist.empty() || !std::isfinite(time)) {
++        return 0;
++    }
+     size_t index = 0;
+ 
+     size_t sta = 0, end = timelist.size();
+@@ -306,11 +309,16 @@ void MISC::imuInterpolation(const IMU &imu01, IMU &imu00, IMU &imu11, double mid
+ 
+ bool MISC::getImuSeriesFromTo(const std::deque<std::pair<IMU, IntegrationState>> &ins_windows, double start, double end,
+                               vector<IMU> &series) {
++    series.clear();
++    if (!std::isfinite(start) || !std::isfinite(end) || end <= start) {
++        LOGW << "Invalid IMU interval " << Logging::doubleData(start) << " to " << Logging::doubleData(end);
++        return false;
++    }
+     // 获得起点和终点附近的索引
+     size_t is = getInsWindowIndex(ins_windows, start);
+     size_t ie = getInsWindowIndex(ins_windows, end);
+ 
+-    if ((is == 0) && (ie == 0)) {
++    if ((is == 0) || (ie == 0) || (ie <= is)) {
+         LOGE << "Failed to get right IMU series " << Logging::doubleData(start) << " to " << Logging::doubleData(end);
+         return false;
+     }

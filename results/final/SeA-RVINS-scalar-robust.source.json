@@ -1,0 +1,101 @@
+{
+  "method": "SeA-RVINS-scalar-robust",
+  "source_run": "results/SeA-RVINS/converted/scalar",
+  "trajectory_rows": 4101,
+  "reference_point": "ALT1 antenna",
+  "source_trajectory": "results/SeA-RVINS/converted/scalar/est.csv",
+  "run_status": "completed",
+  "original_phase": "completed",
+  "result_status": "completed",
+  "incomplete_collection": false,
+  "source_artifacts": {
+    "run_manifest.json": {
+      "method": "SeA-RVINS-scalar-robust",
+      "display_name": "SeA-RVINS (scalar)",
+      "operation": "import existing saved results; estimator was not rerun",
+      "archive_filename": "results_09092026_scalar_robust.7z",
+      "archive_bytes": 95719718,
+      "position_field": "estimated.antenna_pos_enu_m",
+      "reference_point": "ALT1 antenna",
+      "lever_arm_already_applied": true,
+      "native_frame": "fixed ENU at the TEX-CUP base station",
+      "enu_origin_ecef_m": [
+        -742080.4125,
+        -5462031.7412,
+        3198339.6909
+      ],
+      "ecef_to_enu_rotation": [
+        [
+          0.9908966445935098,
+          -0.13462481098714155,
+          0.0
+        ],
+        [
+          0.06790335445674149,
+          0.49979796141927746,
+          0.8634761908788549
+        ],
+        [
+          -0.11624531898896279,
+          -0.8556156602282423,
+          0.5043895992041701
+        ]
+      ],
+      "conversion": "antenna_ecef = enu_origin_ecef_m + ecef_to_enu_rotation.T @ antenna_enu",
+      "origin_evidence": "TEX-CUP base RINEX header and benchmark METHOD_SETUP_GUIDE.md; validated against local canonical GT and saved signed ENU errors; legacy records also validate saved GT ECEF/ENU coordinate pairs",
+      "ground_truth_usage": "validation and subsequent scoring only; no fitted alignment or estimate reconstruction",
+      "native_time": "GPS seconds since 1980-01-06; independently crosschecked against saved UTC datetime",
+      "output_time": "UTC seconds of day 2019-05-09",
+      "gps_minus_utc_seconds": 18,
+      "epoch_selection": "all is_gnss_epoch records with finite saved antenna positions; no IAR/status/error filtering",
+      "common_scoring_window_utc": [
+        "18:09:40",
+        "19:16:59"
+      ],
+      "common_scoring_epochs": 4040,
+      "source_contract_limitations": [
+        "Archives contain records and chunk save times, but no source commit or effective configuration manifest.",
+        "Variant labels are supplied by the user and archive names, not independently proven configuration.",
+        "Vision and visibility counters describe saved diagnostics; they do not recover every estimator setting.",
+        "Imported trajectories do not establish a new estimator rerun or independently reproduce its runtime configuration."
+      ]
+    },
+    "verification.json": {
+      "passed": true,
+      "counts": {
+        "records": 43460,
+        "gnss_records": 4101,
+        "gnss_records_in_common_window": 4040,
+        "gnss_records_with_validated_signed_error": 4101,
+        "vision_logs": 40162,
+        "non_gnss_records_not_exported": 39359,
+        "vision_logs_with_positive_inliers": 40156,
+        "exported_gnss_epochs": 4101,
+        "exported_epochs_in_common_window": 4040,
+        "common_grid_epochs_without_native_gnss_record": 0,
+        "chunks": 35
+      },
+      "max_residuals": {
+        "saved_error_identity_residual_m": 4.75159773589176e-09
+      },
+      "coordinate_tolerance_m": 1e-05,
+      "duplicate_timestamp_count": 0,
+      "duplicate_policy": "reject every duplicate timestamp",
+      "utc_gps_crosscheck_tolerance_s": 2e-06,
+      "first_utc_sec": 65380.0,
+      "last_utc_sec": 69480.0,
+      "vision_frame_actions": {
+        "full": 40162
+      },
+      "visibility_service_enabled": {
+        "False": 4101
+      },
+      "archive_formats": {
+        "sanitized": 35
+      },
+      "frame_validation": "fixed base ENU transform and saved signed errors checked against local canonical GT; legacy archives also validate saved GT ECEF/ENU coordinate pairs"
+    }
+  },
+  "display_name": "SeA-RVINS (scalar)",
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

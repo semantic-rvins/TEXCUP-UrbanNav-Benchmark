@@ -1,0 +1,126 @@
+diff --git a/ic_gvins/ic_gvins/ic_gvins.cc b/ic_gvins/ic_gvins/ic_gvins.cc
+--- a/ic_gvins/ic_gvins/ic_gvins.cc
++++ b/ic_gvins/ic_gvins/ic_gvins.cc
+@@ -764,6 +764,48 @@
+     removeUnusedTimeNode();
+ }
+ 
++std::vector<GVINS::PriorStateBinding> GVINS::capturePriorStateBindings() const {
++    std::vector<PriorStateBinding> bindings;
++    for (size_t k = 0; k < last_marginalization_parameter_blocks_.size(); ++k) {
++        const double *block = last_marginalization_parameter_blocks_[k];
++        if (block == extrinsic_ || block == extrinsic_ + 7) {
++            continue;
++        }
++        size_t matches = 0;
++        for (const auto &state : statedatalist_) {
++            if (block == state.pose || block == state.mix) {
++                bindings.push_back({k, state.time, block == state.pose});
++                ++matches;
++            }
++        }
++        CHECK(matches == 1) << "Prior parameter must reference exactly one live state";
++    }
++    return bindings;
++}
++
++void GVINS::restorePriorStateBindings(const std::vector<PriorStateBinding> &bindings) {
++    auto remapped = last_marginalization_parameter_blocks_;
++    size_t changed = 0;
++    for (const auto &binding : bindings) {
++        CHECK(binding.block_index < remapped.size()) << "Prior parameter order changed during state update";
++        size_t matches = 0;
++        for (auto &state : statedatalist_) {
++            if (state.time == binding.time) {
++                double *block = binding.is_pose ? state.pose : state.mix;
++                changed += remapped[binding.block_index] != block;
++                remapped[binding.block_index] = block;
++                ++matches;
++            }
++        }
++        CHECK(matches == 1) << "State update removed or duplicated a prior-supported timestamp "
++                            << Logging::doubleData(binding.time);
++    }
++    last_marginalization_parameter_blocks_.swap(remapped);
++    if (changed) {
++        LOGI << "Rebound " << changed << " prior state blocks after state storage change";
++    }
++}
++
+ bool GVINS::removeUnusedTimeNode() {
+     if (unused_time_nodes_.empty()) {
+         return false;
+@@ -771,6 +813,10 @@
+ 
+     LOGI << "Remove " << unused_time_nodes_.size() << " unused time node "
+          << Logging::doubleData(unused_time_nodes_[0]);
++
++    // deque middle erase can relocate states that survive the removal.
++    // Record logical identities before any erase invalidates prior pointers.
++    const auto prior_bindings = capturePriorStateBindings();
+ 
+     for (double node : unused_time_nodes_) {
+         // A removed visual keyframe may still anchor an aligned GNSS factor.
+@@ -788,6 +834,18 @@
+             continue;
+         }
+ 
++        bool is_prior_node = false;
++        for (const auto &binding : prior_bindings) {
++            if (MISC::isTheSameTimeNode(binding.time, node, MISC::MINIMUM_TIME_INTERVAL)) {
++                is_prior_node = true;
++                break;
++            }
++        }
++        if (is_prior_node) {
++            LOGI << "Retain prior-supported time node " << Logging::doubleData(node);
++            continue;
++        }
++
+         int index = getStateDataIndex(node);
+ 
+         // Exception
+@@ -811,6 +869,7 @@
+         timelist_.erase(timelist_.begin() + index);
+         statedatalist_.erase(statedatalist_.begin() + index);
+     }
++    restorePriorStateBindings(prior_bindings);
+     unused_time_nodes_.clear();
+ 
+     return true;
+@@ -908,6 +967,9 @@
+             previous = next;
+         }
+ 
++        // Recreated suffix states have new addresses, even at the same times.
++        const auto prior_bindings = capturePriorStateBindings();
++
+         // Remove back time node
+         size_t num_remove = timelist_.size() - index;
+         for (size_t k = num_remove; k > 0; k--) {
+@@ -923,6 +985,7 @@
+         for (size_t k = 0; k < timelist.size(); k++) {
+             addNewTimeNode(timelist[k]);
+         }
++        restorePriorStateBindings(prior_bindings);
+     }
+ 
+     return true;
+diff --git a/ic_gvins/ic_gvins/ic_gvins.h b/ic_gvins/ic_gvins/ic_gvins.h
+--- a/ic_gvins/ic_gvins/ic_gvins.h
++++ b/ic_gvins/ic_gvins/ic_gvins.h
+@@ -156,6 +156,14 @@
+     std::shared_ptr<MarginalizationInfo> last_marginalization_info_{nullptr};
+     std::vector<double *> last_marginalization_parameter_blocks_;
+ 
++    struct PriorStateBinding {
++        size_t block_index;
++        double time;
++        bool is_pose;
++    };
++    std::vector<PriorStateBinding> capturePriorStateBindings() const;
++    void restorePriorStateBindings(const std::vector<PriorStateBinding> &bindings);
++
+     // 先验
+     // The prior
+     bool is_use_prior_{false};

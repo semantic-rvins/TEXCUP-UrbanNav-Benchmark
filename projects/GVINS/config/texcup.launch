@@ -1,0 +1,14 @@
+<launch>
+    <arg name="config_path" default="$(dirname)/gvins_texcup.yaml" />
+    <arg name="gvins_path" default="$(dirname)/../upstream/" />
+
+    <node name="gvins_feature_tracker" pkg="gvins_feature_tracker" type="gvins_feature_tracker" output="log">
+        <param name="config_file" type="string" value="$(arg config_path)" />
+        <param name="gvins_folder" type="string" value="$(arg gvins_path)" />
+    </node>
+
+    <node name="gvins" pkg="gvins" type="gvins" output="log">
+        <param name="config_file" type="string" value="$(arg config_path)" />
+        <param name="gvins_folder" type="string" value="$(arg gvins_path)" />
+    </node>
+</launch>

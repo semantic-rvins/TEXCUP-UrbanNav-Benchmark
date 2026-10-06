@@ -1,0 +1,11 @@
+<launch>
+    <arg name="configfile"
+         default="$(dirname)/icgvins_texcup.yaml"/>
+
+    <node name="ic_gvins_node" pkg="ic_gvins" type="ic_gvins_ros" output="screen">
+        <param name="imu_topic" value="/imu0"/>
+        <param name="gnss_topic" value="/gnss0"/>
+        <param name="image_topic" value="/cam0/image_raw"/>
+        <param name="configfile" value="$(arg configfile)"/>
+    </node>
+</launch>

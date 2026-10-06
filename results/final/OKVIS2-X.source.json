@@ -1,0 +1,24 @@
+{
+  "method": "OKVIS2-X",
+  "source_run": "results/OKVIS2-X/latest",
+  "trajectory_rows": 40372,
+  "reference_point": "ALT1 antenna",
+  "source_trajectory": "results/OKVIS2-X/latest/est.csv",
+  "run_status": "completed",
+  "original_phase": "completed",
+  "result_status": "completed",
+  "incomplete_collection": false,
+  "source_artifacts": {
+    "run_manifest.json": {
+      "display_name": "OKVIS2-X"
+    },
+    "status.json": {
+      "phase": "completed",
+      "method": "OKVIS2-X",
+      "job_id": "280317",
+      "mode": "stereo VI + GNSS fusion (final BA)"
+    }
+  },
+  "display_name": "OKVIS2-X",
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

@@ -1,0 +1,33 @@
+{
+  "name": "GVINS",
+  "run_dir": "results/final",
+  "cut_utc": "18:09:40",
+  "end_utc": "19:16:59",
+  "metrics": {
+    "n_window": 4040,
+    "n_solved": 3664,
+    "n_missing": 376,
+    "availability_pct": 90.6930693069307,
+    "hor_lt_1m_count": 908,
+    "hor_lt_1p5m_count": 1589,
+    "hor_lt_1m_pct_of_window": 22.475247524752476,
+    "hor_lt_1p5m_pct_of_window": 39.33168316831683,
+    "hor_rmse_solved_m": 436.7029397360323,
+    "hor_max_solved_m": 19793.246852257158,
+    "hor_p95_solved_m": 28.755481889923566,
+    "3d_rmse_solved_m": 4289.513787954677,
+    "3d_max_solved_m": 229001.60598056525,
+    "3d_p95_solved_m": 75.42192269064839
+  },
+  "protocol": {
+    "percentage_denominator": "n_window; missing epochs fail thresholds",
+    "distance_population": "n_solved; missing errors are undefined, not zero",
+    "p95": "NumPy linear percentile of solved errors",
+    "error_3d": "hypot(horizontal, vertical)",
+    "outlier_filter": "None"
+  },
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained.",
+  "run_status": "completed",
+  "result_status": "completed",
+  "incomplete_collection": false
+}

@@ -1,0 +1,51 @@
+diff --git a/ic_gvins/ROS/fusion_ros.cc b/ic_gvins/ROS/fusion_ros.cc
+index afc9f94..e6232c8 100644
+--- a/ic_gvins/ROS/fusion_ros.cc
++++ b/ic_gvins/ROS/fusion_ros.cc
+@@ -221,6 +221,7 @@ void FusionROS::imageCallback(const sensor_msgs::ImageConstPtr &imagemsg) {
+ 
+     // Add new Image to GVINS
+     frame_ = Frame::createFrame(weeksec, image);
++    LOGI << "BENCHMARK_IC_IMAGE_INPUT " << Logging::doubleData(weeksec);
+ 
+     frame_buffer_.push(frame_);
+     while (!frame_buffer_.empty()) {
+@@ -280,5 +281,9 @@ int main(int argc, char *argv[]) {
+     // Enter message loop
+     fusion->run();
+ 
++    // Join the monitor thread before main returns, including startup failure.
++    isfinished = true;
++    check_thread.join();
++
+     return 0;
+ }
+diff --git a/ic_gvins/ic_gvins/ic_gvins.cc b/ic_gvins/ic_gvins/ic_gvins.cc
+index 30f465d..49d8d4c 100644
+--- a/ic_gvins/ic_gvins/ic_gvins.cc
++++ b/ic_gvins/ic_gvins/ic_gvins.cc
+@@ -223,6 +223,7 @@ bool GVINS::addNewFrame(const Frame::Ptr &frame) {
+     if (gvinsstate_ > GVINS_INITIALIZING_INS) {
+         if (frame_buffer_mutex_.try_lock()) {
+             frame_buffer_.push(frame);
++            LOGI << "BENCHMARK_IC_FRAME_QUEUED " << Logging::doubleData(frame->stamp());
+ 
+             tracking_sem_.notify_one();
+ 
+@@ -231,6 +232,7 @@ bool GVINS::addNewFrame(const Frame::Ptr &frame) {
+         }
+         return false;
+     }
++    LOGI << "BENCHMARK_IC_FRAME_INITIALIZING " << Logging::doubleData(frame->stamp());
+     return true;
+ }
+ 
+@@ -533,6 +535,8 @@ void GVINS::runTracking() {
+             }
+ 
+             TrackState trackstate = tracking_->track(frame);
++            LOGI << "BENCHMARK_IC_TRACKED " << Logging::doubleData(frame->stamp() - frame->timeDelay())
++                 << " " << frame->numFeatures() << " " << static_cast<int>(trackstate);
+             if (trackstate == TRACK_LOST) {
+                 LOGE << "Tracking lost at " << Logging::doubleData(frame->stamp());
+             }

@@ -1,0 +1,7 @@
+# Preserve upstream patch context and native result bytes.
+*.patch -text -whitespace
+/results/final/*.csv -text whitespace=cr-at-eol
+# Supplied SeA-RVINS record archives are stored in Git LFS.
+results/SeA-RVINS/*.7z filter=lfs diff=lfs merge=lfs -text
+# Independent broadcast-navigation inputs use Git LFS.
+/data/tex_cup/*.19p filter=lfs diff=lfs merge=lfs -text

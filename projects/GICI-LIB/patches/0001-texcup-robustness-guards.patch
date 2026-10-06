@@ -1,0 +1,167 @@
+diff --git a/include/gici/estimate/estimator_base.h b/include/gici/estimate/estimator_base.h
+index d516463..735b685 100755
+--- a/include/gici/estimate/estimator_base.h
++++ b/include/gici/estimate/estimator_base.h
+@@ -87,7 +87,8 @@ public:
+   const std::shared_ptr<Graph>& getGraph() const { return graph_; }
+ 
+   // Get timestamp
+-  double getTimestamp() { return lastState().timestamp; }
++  // NOTE(texcup-benchmarks): 0.0 when no completed state exists yet.
++  double getTimestamp() { return states_.size() > 1 ? lastState().timestamp : 0.0; }
+ 
+   // Get oldest timestamp
+   double getOldestTimestamp() { return oldestState().timestamp; }
+diff --git a/include/gici/gnss/gnss_estimator_base.h b/include/gici/gnss/gnss_estimator_base.h
+index 1f26626..6ad10e3 100755
+--- a/include/gici/gnss/gnss_estimator_base.h
++++ b/include/gici/gnss/gnss_estimator_base.h
+@@ -90,7 +90,9 @@ public:
+   }
+ 
+   // Get solution status
+-  inline GnssSolutionStatus getSolutionStatus() { return lastState().status; }
++  // NOTE(texcup-benchmarks): None when no completed state exists yet.
++  inline GnssSolutionStatus getSolutionStatus() {
++    return states_.size() > 1 ? lastState().status : GnssSolutionStatus::None; }
+ 
+   // Get number of satellite
+   inline int getNumberSatellite() { return num_satellites_; }
+diff --git a/include/gici/gnss/rtk_estimator.h b/include/gici/gnss/rtk_estimator.h
+index 7dc9276..4e931b2 100755
+--- a/include/gici/gnss/rtk_estimator.h
++++ b/include/gici/gnss/rtk_estimator.h
+@@ -50,7 +50,10 @@ public:
+   void logIntermediateData() override;
+ 
+   // Get state que
+-  const State getState() { return getLast(states_); }
++  // NOTE(texcup-benchmarks): return a null state instead of CHECK-failing when no
++  // epoch has completed yet (e.g. this estimator rejected epochs for insufficient
++  // satellites); callers already handle invalid/missing parameter blocks.
++  const State getState() { return states_.size() > 1 ? getLast(states_) : State(); }
+ 
+ protected:
+   // Add GNSS measurements and state
+diff --git a/src/estimate/estimator_base.cpp b/src/estimate/estimator_base.cpp
+index 0d7dd0d..3208f3c 100755
+--- a/src/estimate/estimator_base.cpp
++++ b/src/estimate/estimator_base.cpp
+@@ -116,6 +116,8 @@ bool EstimatorBase::applyMarginalization()
+ // Get pose
+ Transformation EstimatorBase::getPoseEstimate()
+ {
++  // NOTE(texcup-benchmarks): no completed state yet -> identity fallback
++  if (states_.size() < 2) return Transformation();
+   State& state = getLast(states_);
+   if (!graph_->parameterBlockExists(state.id_in_graph.asInteger())) {
+     return Transformation();
+@@ -139,6 +141,8 @@ bool EstimatorBase::getPoseEstimateAt(
+ // Get latest speed and bias
+ SpeedAndBias EstimatorBase::getSpeedAndBiasEstimate()
+ {
++  // NOTE(texcup-benchmarks): no completed state yet -> zero fallback
++  if (states_.size() < 2) return SpeedAndBias::Zero();
+   State& state = getLast(states_);
+   if (!graph_->parameterBlockExists(state.id_in_graph.asInteger())) {
+     return SpeedAndBias::Zero();
+@@ -162,6 +166,8 @@ bool EstimatorBase::getSpeedAndBiasEstimateAt(
+ // Get latest minimal covariance 
+ Eigen::Matrix<double, 15, 15> EstimatorBase::getCovariance()
+ {
++  // NOTE(texcup-benchmarks): no completed state yet -> zero fallback
++  if (states_.size() < 2) return Eigen::Matrix<double, 15, 15>::Zero();
+   State& state = getLast(states_);
+   if (!graph_->parameterBlockExists(state.id_in_graph.asInteger())) {
+     return Eigen::Matrix<double, 15, 15>::Zero();
+diff --git a/src/fusion/rtk_imu_camera_rrr_estimator.cpp b/src/fusion/rtk_imu_camera_rrr_estimator.cpp
+index 188ab4b..52abd6d 100755
+--- a/src/fusion/rtk_imu_camera_rrr_estimator.cpp
++++ b/src/fusion/rtk_imu_camera_rrr_estimator.cpp
+@@ -140,8 +140,12 @@ bool RtkImuCameraRrrEstimator::addGnssMeasurementAndState(
+     curGnssRov(), curGnssRef(), system_to_base_prn, gnss_base_options_.common);
+ 
+   // Cycle-slip detection
+-  if (!isFirstEpoch()) {
+-    cycleSlipDetectionSD(lastGnssRov(), lastGnssRef(), 
++  // NOTE(texcup-benchmarks): also require a stored previous GNSS measurement pair.
++  // With fast keyframe turnover (high vehicle speed), all previous GNSS states can
++  // be marginalized between two 1 Hz GNSS epochs, leaving only the current slot in
++  // gnss_measurement_pairs_; lastGnssRov() would then CHECK-fail (seq.size() > 1).
++  if (!isFirstEpoch() && gnss_measurement_pairs_.size() > 1) {
++    cycleSlipDetectionSD(lastGnssRov(), lastGnssRef(),
+       curGnssRov(), curGnssRef(), gnss_base_options_.common);
+   }
+ 
+@@ -191,7 +195,9 @@ bool RtkImuCameraRrrEstimator::addGnssMeasurementAndState(
+     false, getImuMeasurementNear(timestamp).angular_velocity);
+ 
+   // Add relative errors
+-  if (lastGnssState().valid()) {  // maybe invalid here because of long term GNSS absent
++  // NOTE(texcup-benchmarks): same guard as above for marginalized GNSS history.
++  if (lastGnssState().valid() && gnss_measurement_pairs_.size() > 1 &&
++      ambiguity_states_.size() > 1) {  // maybe invalid here because of long term GNSS absent
+     // frequency
+     addRelativeFrequencyResidualBlock(lastGnssState(), states_[index]);
+     // ambiguity
+diff --git a/src/vision/feature_tracker.cpp b/src/vision/feature_tracker.cpp
+index ad38f3d..26a0428 100755
+--- a/src/vision/feature_tracker.cpp
++++ b/src/vision/feature_tracker.cpp
+@@ -26,6 +26,10 @@ void FeatureTracker::track(const FramePtr& ref_frame,
+     const FramePtr& cur_frame, OccupandyGrid2D& grid,
+     const Eigen::Quaterniond& q_cur_ref)
+ {
++  // NOTE(texcup-benchmarks): nothing to track (all features lost) -> OpenCV calls
++  // below would throw on empty input arrays.
++  if (ref_frame->num_features_ == 0) return;
++
+   // Apply LK optical flow
+   std::vector<cv::Point2f> ref_points;
+   std::vector<cv::Point2f> cur_points;
+@@ -91,9 +95,18 @@ void FeatureTracker::track(const FramePtr& ref_frame,
+   status.clear();
+ 
+   // Apply ransac to reject error matches
+-  cv::findFundamentalMat(ref_bearings, cur_bearings, 
+-    cv::FM_RANSAC, options_.ransac_threshold / cur_frame->cam()->errorMultiplier(), 
+-    options_.ransac_confidence, status);
++  // NOTE(texcup-benchmarks): findFundamentalMat throws on < 8 points (observed as
++  // "input arrays should be 2D or 3D point sets" abort when tracking momentarily
++  // lost nearly all features). Keep the few LK-tracked points unfiltered instead;
++  // downstream reprojection-error rejection handles remaining outliers.
++  if (num_tracked >= 8) {
++    cv::findFundamentalMat(ref_bearings, cur_bearings,
++      cv::FM_RANSAC, options_.ransac_threshold / cur_frame->cam()->errorMultiplier(),
++      options_.ransac_confidence, status);
++  }
++  else {
++    status.assign(num_tracked, 1);
++  }
+ 
+   // Put valid features in current frame
+   const cv::Mat& mask = cur_frame->cam()->getMask();
+diff --git a/src/vision/visual_initialization.cpp b/src/vision/visual_initialization.cpp
+index 8c6d210..40d7b99 100755
+--- a/src/vision/visual_initialization.cpp
++++ b/src/vision/visual_initialization.cpp
+@@ -259,6 +259,10 @@ int AbstractVisualInitialization::estimateFundamental(
+   const size_t N = f_cur.cols();
+   const double thresh = reproj_error_thresh/focal_length;
+ 
++  // NOTE(texcup-benchmarks): findEssentialMat/recoverPose throw on degenerate
++  // input sizes; report no inliers so the caller retries initialization.
++  if (N < 8) return 0;
++
+   // select valid matchs
+   std::vector<cv::Point2f> ref_pts(N), cur_pts(N);
+   for (size_t i = 0; i < N; i++) {
+@@ -272,6 +276,8 @@ int AbstractVisualInitialization::estimateFundamental(
+   cv::Mat camera_matrix = (cv::Mat_<double>(3, 3) << 1, 0, 0, 0, 1, 0, 0, 0, 1);
+   cv::Mat essential = cv::findEssentialMat(
+     ref_pts, cur_pts, camera_matrix, cv::FM_RANSAC, 0.999, thresh);
++  // NOTE(texcup-benchmarks): degenerate geometry can yield empty/stacked results.
++  if (essential.empty() || essential.rows != 3 || essential.cols != 3) return 0;
+ 
+   // recover pose
+   cv::Mat R_cv, t_cv;

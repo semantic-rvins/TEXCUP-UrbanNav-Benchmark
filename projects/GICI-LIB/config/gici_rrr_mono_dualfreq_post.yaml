@@ -1,0 +1,195 @@
+# GICI offline post-processing RTK/IMU/mono-camera RRR fusion on TEX-CUP.
+# Adapted from upstream option/post_estimation_RTK_RRR_rinex_imutext.yaml.
+# Estimator tuning left at upstream defaults; only data paths and sensor
+# calibration (IMU noise, extrinsics, camera intrinsics) are TEX-CUP specific.
+#
+# Frames: IMU data fed in the z-up calibrated frame (x-right, y-forward, z-up;
+# see loaders/convert_imu.py). This frame already matches GICI's vehicle/body
+# convention (NHC constrains body x/z velocity => y forward), so
+# body_to_imu_rotation = [0,0,0].
+# gnss_extrinsics = t_imu_to_ant_in_b, T_B_C = [rot_imu_from_opencv | t_imu_to_port_cam_in_b]
+# as documented in the root METHOD_SETUP_GUIDE.md.
+# Paths below are repository-relative templates; the run supervisor resolves
+# the actual input/output paths for each isolated run.
+stream:
+  streamers:
+  - streamer:
+      tag: str_gnss_rov_file
+      type: post-file
+      path: projects/GICI-LIB/data_converted/rover_cut.obs
+      format:
+        type: gnss-rinex
+      latency: 0.0
+  - streamer:
+      tag: str_gnss_ref_file
+      type: post-file
+      path: projects/GICI-LIB/data_converted/base_cut.obs
+      format:
+        type: gnss-rinex
+  - streamer:
+      tag: str_gnss_eph_file
+      type: post-file
+      path: data/tex_cup/brdm1290.19p
+      burst_load: true
+      format:
+        type: gnss-rinex
+  - streamer:
+      tag: str_imu_file
+      type: post-file
+      path: projects/GICI-LIB/data_converted/imu_zup.txt
+      format:
+        type: imu-text
+  - streamer:
+      tag: str_camera_file
+      type: post-file
+      path: projects/GICI-LIB/data_converted/port_images.pack
+      format:
+        type: image-pack
+        width: 2048
+        height: 732
+
+  - streamer:
+      tag: str_rrr_solution_file
+      input_tags: [fmt_rrr_solution_file]
+      type: file
+      path: results/GICI-RRR/run/solution.nmea
+      enable_time_tag: false
+
+  formators:
+  - formator:
+      io: output
+      tag: fmt_rrr_solution_file
+      type: nmea
+      use_gga: true
+      use_rmc: false
+      use_esa: true
+      use_esd: false
+      talker_id: GP
+
+  replay:
+    enable: true
+    start_offset: 0.0
+
+estimate:
+- estimator:
+    tag: est_gnss_imu_camera_rrr
+    type: rtk_imu_camera_rrr
+    input_tags: [str_gnss_rov_file, str_gnss_ref_file, str_gnss_eph_file, str_imu_file, str_camera_file]
+    str_gnss_rov_file_roles: [rover]
+    str_gnss_ref_file_roles: [reference]
+    str_gnss_eph_file_roles: [ephemeris]
+    str_imu_file_roles: [major]
+    str_camera_file_roles: [mono]
+    output_tags: [fmt_rrr_solution_file]
+    output_align_tag: str_imu_file
+    output_downsample_rate: 40
+    compute_covariance: false
+    enable_input_align: true
+    input_align_latency: 1.0
+    rtk_imu_camera_rrr_options:
+      max_keyframes: 3
+      min_yaw_std_init_visual: 0.5
+    rtk_options:
+      use_ambiguity_resolution: true
+    gnss_estimator_base_options:
+      use_outlier_rejection: true
+      reject_one_outlier_once: false
+      max_pesudorange_error: 4.0
+      max_phaserange_error: 0.06
+      max_doppler_error: 0.5
+      gnss_common:
+        # Canonical reduced RINEX already contains no GPS 2L or Galileo 5Q.
+        # Exclude GLONASS measurements here, not only ambiguity fixing below.
+        system_exclude: [R]
+        min_elevation: 12.0
+        min_SNR: [35.0, 30.0]
+    gnss_loose_estimator_base_options:
+    visual_estimator_base_options:
+      feature_error_std: 10.0
+      stable_feature_error_std: 1.0
+      min_observation_stable: 20
+      landmark_outlier_rejection_threshold: 2.0
+    imu_estimator_base_options:
+      imu_parameters:
+        # Recorded benchmark IMU calibration (root METHOD_SETUP_GUIDE.md):
+        # gyro bias std 80 deg/h, acc bias std 3.5 mg, gyro noise 0.01 deg/s/sqrt(Hz),
+        # acc noise 0.1 mg/sqrt(Hz). Bias random-walk densities not specified there;
+        # kept at upstream sample values.
+        sigma_bg: 3.879e-04
+        sigma_ba: 3.43e-02
+        sigma_g_c: 1.745e-04
+        sigma_a_c: 9.79e-04
+        sigma_gw_c: 2.0881e-06
+        sigma_aw_c: 2.7361e-04
+      body_to_imu_rotation: [0.0, 0.0, 0.0]
+      body_to_imu_rotation_std: 5.0
+      car_motion: true
+      car_motion_min_velocity: 3.0
+      car_motion_max_anguler_velocity: 5.0
+    estimator_base_options:
+      max_iteration: 5
+      num_threads: 4
+      max_solver_time: 0.03
+      verbose_output: true
+      solver_type: dense_schur
+      trust_region_strategy_type: dogleg
+    ambiguity_resolution_options:
+      system_exclude: [R]
+      min_percentage_fixation_uwl: 1.0
+      min_percentage_fixation_wl: 0.9
+      min_percentage_fixation_nl: 0.9
+      ratio: 2.0
+    gnss_imu_initializer_options:
+      max_iteration: 30
+      num_threads: 4
+      max_solver_time: 0.5
+      # ALT1 antenna lever arm in the RFU IMU frame
+      gnss_extrinsics: [-0.610, -0.052, 0.010]
+      gnss_extrinsics_initial_std: [0.0, 0.0, 0.0]
+      time_window_length_slow_motion: 0.05
+      time_window_length_dynamic_motion: 0.5
+      min_acceleration: 0.5
+    feature_handler_options:
+      max_features_per_frame: 100
+      max_n_kfs: 30
+      kfselect_min_numkfs: 30
+      kfselect_min_disparity: 10.0
+      kfselect_min_dist_metric: 0.5
+      kfselect_min_angle: 5.0
+      kfselect_min_dt: 1.0
+      detector:
+        cell_size: 40
+      initialization:
+      camera_parameters:
+        label: "texcup-port"
+        cameras:
+        - camera:
+            label: cam0
+            image_width: 2048
+            image_height: 732
+            type: pinhole
+            intrinsics:
+              cols: 1
+              rows: 4
+              # texcup_port-camchain.yaml: fx fy cx cy
+              data: [1355.07090197, 1360.08043642, 1013.57243982, 330.36528878]
+            distortion:
+              type: radial-tangential
+              parameters:
+                cols: 1
+                rows: 4
+                data: [-0.04362915, 0.03696032, 0.00059401, 0.00057094]
+          T_B_C:
+            cols: 4
+            rows: 4
+            # cam -> IMU(z-up): R = rot_imu_from_opencv, t = t_imu_to_port_cam_in_b
+            data: [1.0,  0.0,  0.0, -0.303,
+                   0.0,  0.0,  1.0,  0.011,
+                   0.0, -1.0,  0.0,  0.033,
+                   0.0,  0.0,  0.0,  1.0]
+
+logging:
+  enable: true
+  min_log_level: 0
+  log_to_stderr: true
+  file_directory: results/GICI-RRR/run/log

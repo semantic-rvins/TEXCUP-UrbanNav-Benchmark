@@ -1,0 +1,18 @@
+%YAML:1.0
+---
+# TEX-CUP RIGHT ('star') camera, from camera-calibration-stereo/texcup_stereo-camchain_ovins.yaml.
+# Native 2048x732 images; full stereo-calibration intrinsics and radtan coefficients.
+model_type: PINHOLE
+camera_name: camera
+image_width: 2048
+image_height: 732
+distortion_parameters:
+   k1: -0.03596
+   k2: 0.03498
+   p1: 0.00372
+   p2: -0.00253
+projection_parameters:
+   fx: 1319.512
+   fy: 1324.766
+   cx: 1021.862
+   cy: 345.805

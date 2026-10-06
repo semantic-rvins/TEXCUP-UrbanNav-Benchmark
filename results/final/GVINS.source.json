@@ -1,0 +1,257 @@
+{
+  "method": "GVINS",
+  "source_run": "results/GVINS/run_20260910T225733Z",
+  "trajectory_rows": 18225,
+  "reference_point": "ALT1 antenna",
+  "source_artifacts": {
+    "run_manifest.json": {
+      "started_utc": "2026-09-10T22:57:33.796378+00:00",
+      "bag": "projects/GVINS/bags/texcup_gvins_full.bag",
+      "bag_bytes": 58108368520,
+      "replay_rate": 1.0,
+      "python": "<conda-env:benchmark_ros>/bin/python",
+      "commands": [
+        {
+          "name": "roscore",
+          "argv": [
+            "roscore",
+            "-p",
+            "11951"
+          ],
+          "started_utc": "2026-09-10T22:57:33.946718+00:00"
+        },
+        {
+          "name": "record",
+          "argv": [
+            "rosbag",
+            "record",
+            "--lz4",
+            "--buffsize=256",
+            "-O",
+            "results/GVINS/run_20260910T225733Z/gvins_out.bag",
+            "/gvins/gnss_fused_lla",
+            "/gvins/gnss_anchor_lla",
+            "/gvins/enu_pose",
+            "/gvins/odometry",
+            "/gvins/gnss_enu_path",
+            "/gvins_feature_tracker/restart",
+            "__name:=gvins_rec"
+          ],
+          "started_utc": "2026-09-10T22:57:34.640526+00:00"
+        },
+        {
+          "name": "gvins",
+          "argv": [
+            "roslaunch",
+            "--screen",
+            "projects/GVINS/config/texcup.launch",
+            "config_path:=results/GVINS/run_20260910T225733Z/gvins_texcup.yaml",
+            "gvins_path:=projects/GVINS/upstream/"
+          ],
+          "started_utc": "2026-09-10T22:57:34.641141+00:00"
+        },
+        {
+          "name": "play",
+          "argv": [
+            "rosbag",
+            "play",
+            "projects/GVINS/bags/texcup_gvins_full.bag",
+            "--rate",
+            "1.0",
+            "--queue=1000",
+            "-d",
+            "3",
+            "--quiet"
+          ],
+          "started_utc": "2026-09-10T22:57:38.143842+00:00"
+        },
+        {
+          "name": "extract",
+          "argv": [
+            "<conda-env:benchmark_ros>/bin/python",
+            "projects/GVINS/loaders/extract_est.py",
+            "--bag",
+            "results/GVINS/run_20260910T225733Z/gvins_out.bag",
+            "--out",
+            "results/GVINS/run_20260910T225733Z/est.csv"
+          ],
+          "started_utc": "2026-09-11T00:14:11.852588+00:00"
+        },
+        {
+          "name": "evaluate",
+          "argv": [
+            "<conda-env:benchmark_ros>/bin/python",
+            "common/evaluate.py",
+            "--est",
+            "results/GVINS/run_20260910T225733Z/est.csv",
+            "--out",
+            "results/GVINS/run_20260910T225733Z",
+            "--name",
+            "GVINS",
+            "--gt",
+            "data/tex_cup/ground_truth.log",
+            "--cut",
+            "18:09:40",
+            "--end",
+            "19:16:59"
+          ],
+          "started_utc": "2026-09-11T00:14:21.912471+00:00"
+        }
+      ],
+      "evaluation": {
+        "cut_utc": "18:09:40",
+        "end_utc": "19:16:59",
+        "reference": "ALT1"
+      },
+      "patches": {
+        "gnss_comm.patch": "e5db2cec2366fc4171eaa22e83f4c7bc5f11ac69e61154c9efa795d1fd95a5ef",
+        "gnss_comm.commit": "a743b2d6cd0d9933373f73acbd6da0b78d3bd99d00ec1a1ffd03b98f2cb86d75",
+        "gvins_upstream.patch": "c0a89b2fd2a5dde0e9d9cbd90d95951b969fb6f41805749ce6abb0245e81ac21",
+        "gvins_upstream.commit": "537d6ae19503ff116eff6fd1d23c019e88c46fda0cc2a6835ec182d9ad5f9791"
+      },
+      "source_revisions": {
+        "upstream": "d2cf40b49c6eb0e6ad3caa4f613713983be3fd74",
+        "gnss_comm": "a2035fec1cc427bba184d25ff1fde8dcf23c9ce1"
+      },
+      "scripts": {
+        "projects/GVINS/run_session.py": "a97c84c87ef37b85aab9b5af0777c1af9792c4f0fa632de4515b135f5ecce686",
+        "projects/GVINS/run_gvins.sh": "f7bc9a47f075a9197fd7a8872803cc7a9ac7dd71cdfc4a9ae64306760dedc8ad",
+        "projects/GVINS/loaders/make_rosbag.py": "125b8a0e9cfb530e4cd477627ffd3ab73774e5159e0e35cf57906cb92870fc9d",
+        "projects/GVINS/loaders/extract_est.py": "c789ebd4215a3ec4f8f3169df40509c61ad224efbf52fa35dce1d6675550b05c",
+        "common/evaluate.py": "c5357c4d45ff9f79670573e691f8c48721f831e8a2dfe8155a0fa5f2e3a17e2c"
+      },
+      "thread_environment": {
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "finished_utc": "2026-09-11T00:14:22.970067+00:00"
+    },
+    "status.json": {
+      "phase": "completed",
+      "supervisor_pid": 2856773,
+      "started_utc": "2026-09-10T22:57:33.796338+00:00",
+      "run_dir": "results/GVINS/run_20260910T225733Z",
+      "replay_rate": 1.0,
+      "ros_port": 11951,
+      "warning_count": 73,
+      "error_count": 0,
+      "feature_count": 40370,
+      "pose_count": 19551,
+      "fused_count": 18225,
+      "last_imu_utc": 1557429880.655,
+      "last_feature_utc": 1557429418.9567318,
+      "last_pose_utc": 1557429418.8568594,
+      "last_fused_utc": 1557429418.8568594,
+      "message": "Replay, extraction and evaluation completed; review eval.json and logs",
+      "updated_utc": "2026-09-11T00:14:22.970607+00:00",
+      "processes": {
+        "roscore": {
+          "pid": 2856819,
+          "returncode": 0
+        },
+        "record": {
+          "pid": 2856854,
+          "returncode": 0
+        },
+        "gvins": {
+          "pid": 2856855,
+          "returncode": 0
+        },
+        "play": {
+          "pid": 2856914,
+          "returncode": 0
+        },
+        "extract": {
+          "pid": 2928979,
+          "returncode": 0
+        },
+        "evaluate": {
+          "pid": 2929171,
+          "returncode": 0
+        }
+      },
+      "feature_to_pose_lag_seconds": 0.09987235069274902
+    },
+    "input_validation.json": {
+      "bag": "projects/GVINS/bags/texcup_gvins_full.bag",
+      "bag_bytes": 58108368520,
+      "topics": {
+        "/cam0/image_raw": {
+          "count": 40372,
+          "first_utc": 1557425380.0477993,
+          "last_utc": 1557429418.9567318
+        },
+        "/imu0": {
+          "count": 450561,
+          "first_utc": 1557425375.003,
+          "last_utc": 1557429880.655
+        },
+        "/ublox_driver/ephem": {
+          "count": 3957,
+          "first_utc": 1557425372.0,
+          "last_utc": 1557425375.9557133
+        },
+        "/ublox_driver/iono_params": {
+          "count": 147,
+          "first_utc": 1557425379.5,
+          "last_utc": 1557429905.5
+        },
+        "/ublox_driver/range_meas": {
+          "count": 4557,
+          "first_utc": 1557425380.0,
+          "last_utc": 1557429936.0
+        }
+      },
+      "checks": {
+        "gnss_gpst_payload_minus_utc_record_equals_18_seconds": true,
+        "first_middle_last_images_match_native_port_hdf5": true,
+        "all_image_timestamps_covered_in_order": true,
+        "first_middle_last_imu_match_raw_to_rfu_and_utc": true
+      },
+      "gnss_observations_by_system": {
+        "BeiDou": 19088,
+        "Galileo": 24807,
+        "GPS": 39206
+      },
+      "gnss_frequencies_hz": {
+        "BeiDou": [
+          1561098000.0
+        ],
+        "Galileo": [
+          1207140000.0,
+          1575420000.0
+        ],
+        "GPS": [
+          1227600000.0,
+          1575420000.0
+        ]
+      },
+      "input_files": {
+        "asterx4_rover.obs": {
+          "path": "data/tex_cup/asterx4_rover.obs",
+          "bytes": 15179774,
+          "mtime_ns": 1788238542906722503
+        },
+        "lord_imu.log": {
+          "path": "data/tex_cup/lord_imu.log",
+          "bytes": 54568194,
+          "mtime_ns": 1765146802277444576
+        },
+        "brdm1290_v304.19p": {
+          "path": "data/tex_cup/brdm1290_v304.19p",
+          "bytes": 8655705,
+          "mtime_ns": 1788927188521364691
+        },
+        "images.h5": {
+          "path": "data/tex_cup/camera_data/images.h5",
+          "bytes": 80392684365,
+          "mtime_ns": 1762158430000000000
+        }
+      },
+      "large_file_provenance": "Bag and HDF5 are identified by path/size and sensor checks; no full-file hash computed."
+    },
+    "gvins_texcup.yaml": "%YAML:1.0\n\n# GVINS config for TEX-CUP (2019-05-09 Austin), mono LEFT ('port') camera,\n# Lord 3DM-GX5-25 IMU, Septentrio AsteRx4 raw GNSS (converted from RINEX).\n# Native 2048x732 images with full-resolution intrinsics.\n\n#common parameters\nimu_topic: \"/imu0\"\nimage_topic: \"/cam0/image_raw\"\noutput_dir: \"results/GVINS/run_20260910T225733Z/gvins_output\"\n\n#camera calibration (texcup_port-camchain.yaml, kalibr pinhole radtan, native size)\nmodel_type: PINHOLE\ncamera_name: camera\nimage_width: 2048\nimage_height: 732\ndistortion_parameters:\n   k1: -0.04362915\n   k2: 0.03696032\n   p1: 0.00059401\n   p2: 0.00057094\nprojection_parameters:\n   fx: 1355.07090197\n   fy: 1360.08043642\n   cx: 1013.57243982\n   cy: 330.36528878\n\ngnss_enable: 1\ngnss_meas_topic: \"/ublox_driver/range_meas\"\ngnss_ephem_topic: \"/ublox_driver/ephem\"\ngnss_glo_ephem_topic: \"/ublox_driver/glo_ephem\"\ngnss_iono_params_topic: \"/ublox_driver/iono_params\"\ngnss_tp_info_topic: \"/ublox_driver/time_pulse_info\"\ngnss_elevation_thres: 30\ngnss_psr_std_thres: 2.0\ngnss_dopp_std_thres: 2.0\ngnss_track_num_thres: 20\ngnss_ddt_sigma: 0.1\n\ngnss_local_online_sync: 0\nlocal_trigger_info_topic: \"/external_trigger\"\ngnss_local_time_diff: 18.0     # GPST - UTC on 2019-05-09; all bag stamps are UTC\n\n# Klobuchar parameters broadcast on 2019-05-09 (brdc1290.19n ION ALPHA/BETA)\ngnss_iono_default_parameters: !!opencv-matrix\n   rows: 1\n   cols: 8\n   dt: d\n   data: [8.3819e-09, 2.2352e-08, -5.9605e-08, -1.1921e-07,\n          8.6016e+04, 6.5536e+04, -1.3107e+05, -4.5875e+05]\n\n# Camera -> IMU extrinsic from the active UrbanRTK-INS-FGO\n# constants/parameters.py TexCupLordImuParams.rot_imu_from_opencv and\n# t_imu_to_port_cam_in_b. IMU frame = RFU, matching make_rosbag.py.\nestimate_extrinsic: 1   # optimize around this initial guess\n#Rotation from camera frame to imu frame, imu^R_cam\nextrinsicRotation: !!opencv-matrix\n   rows: 3\n   cols: 3\n   dt: d\n   data: [ 1.0,  0.0,  0.0,\n           0.0,  0.0,  1.0,\n           0.0, -1.0,  0.0]\n#Translation from camera frame to imu frame, imu^T_cam\nextrinsicTranslation: !!opencv-matrix\n   rows: 3\n   cols: 1\n   dt: d\n   data: [-0.303, 0.011, 0.033]\n\n#feature tracker parameters\nmax_cnt: 150\nmin_dist: 30\nfreq: 0\nF_threshold: 1.0\nshow_track: 0\nequalize: 1\nfisheye: 0\n\n#optimization parameters\nmax_solver_time: 0.08   # 10 Hz camera -> allow a bit more than the 0.04 example\nmax_num_iterations: 8\nkeyframe_parallax: 10.0\n\n#imu parameters (GVINS example defaults; Lord GX5-25 is at least this good)\nacc_n: 0.08\ngyr_n: 0.004\nacc_w: 0.00004\ngyr_w: 2.0e-6\ng_norm: 9.7935          # Austin, lat 30.29 deg\n\n#unsynchronization parameters\nestimate_td: 0\ntd: 0.0\n"
+  },
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

@@ -1,0 +1,79 @@
+diff --git a/ingvio_estimator/src/IngvioFilter.cpp b/ingvio_estimator/src/IngvioFilter.cpp
+index c943b6d..7404c31 100644
+--- a/ingvio_estimator/src/IngvioFilter.cpp
++++ b/ingvio_estimator/src/IngvioFilter.cpp
+@@ -44,6 +44,7 @@
+ #include "GnssSync.h"
+ #include "GvioAligner.h"
+ #include "GnssUpdate.h"
++#include "GnssManager.h"
+ 
+ namespace ingvio
+ {
+@@ -114,8 +115,10 @@ namespace ingvio
+             _path_spp_pub = _nh.advertise<nav_msgs::Path>("path_spp", 1);
+       
+             _odom_gt_pub = _nh.advertise<nav_msgs::Odometry>("pose_gt", 5);
+-            
++
+             _path_gt_pub = _nh.advertise<nav_msgs::Path>("path_gt", 1);
++
++            _odom_ecef_pub = _nh.advertise<nav_msgs::Odometry>("pose_ecef", 5);
+         }
+         
+         _filter_params.printParams();
+@@ -451,6 +454,42 @@ namespace ingvio
+         _path_w_msg.header.frame_id = "world";
+         _path_w_msg.poses.push_back(pose_w);
+         _path_w_pub.publish(_path_w_msg);
++
++        // Publish the globally referenced pose (ECEF) once GVIO alignment is
++        // available: p_ecef = T_enu2ecef * R_w2enu(yof) * p_w. Uses the
++        // filter's YOF state if present, else the aligner's initial yaw.
++        if (_filter_params._enable_gnss && _gvio_aligner->isAlign())
++        {
++            Eigen::Isometry3d T_w2enu = Eigen::Isometry3d::Identity();
++
++            if (_state->_gnss.find(State::GNSSType::YOF) != _state->_gnss.end())
++                T_w2enu = GnssManager::calcTw2enu(_state);
++            else
++                T_w2enu.linear() = _gvio_aligner->getRw2enu();
++
++            const Eigen::Isometry3d T_w2ecef = _gvio_aligner->getTenu2ecef()*T_w2enu;
++
++            const Eigen::Vector3d p_ecef = T_w2ecef*T_i2w.translation();
++            const Eigen::Matrix3d R_i2ecef = T_w2ecef.linear()*T_i2w.linear();
++            const Eigen::Vector3d v_ecef = T_w2ecef.linear()*vel;
++
++            if (!p_ecef.hasNaN() && !R_i2ecef.hasNaN())
++            {
++                Eigen::Isometry3d T_i2ecef = Eigen::Isometry3d::Identity();
++                T_i2ecef.linear() = R_i2ecef;
++                T_i2ecef.translation() = p_ecef;
++
++                nav_msgs::Odometry odom_ecef_msg;
++                odom_ecef_msg.header.stamp = time;
++                odom_ecef_msg.header.frame_id = "ecef";
++                odom_ecef_msg.child_frame_id = "imu";
++
++                tf::poseEigenToMsg(T_i2ecef, odom_ecef_msg.pose.pose);
++                tf::vectorEigenToMsg(v_ecef, odom_ecef_msg.twist.twist.linear);
++
++                _odom_ecef_pub.publish(odom_ecef_msg);
++            }
++        }
+     }
+     
+     void IngvioFilter::visualizeSpp(const std_msgs::Header& header, const SppMeas& spp_meas)
+diff --git a/ingvio_estimator/src/IngvioFilter.h b/ingvio_estimator/src/IngvioFilter.h
+index 0a71a63..69dbd12 100644
+--- a/ingvio_estimator/src/IngvioFilter.h
++++ b/ingvio_estimator/src/IngvioFilter.h
+@@ -81,6 +81,7 @@ namespace ingvio
+         
+         ros::Publisher _odom_spp_pub, _odom_gt_pub;
+         ros::Publisher _path_spp_pub, _path_gt_pub;
++        ros::Publisher _odom_ecef_pub;
+         
+         nav_msgs::Path _path_w_msg, _path_spp_msg, _path_gt_msg;
+         

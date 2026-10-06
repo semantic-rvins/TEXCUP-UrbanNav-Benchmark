@@ -1,0 +1,7 @@
+upstream/
+catkin_ws/
+bags/
+results/*.bag
+results/*.bag.active
+results/logs/
+results/ros_home/

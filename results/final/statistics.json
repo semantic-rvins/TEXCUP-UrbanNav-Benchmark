@@ -1,0 +1,272 @@
+{
+  "protocol": {
+    "date_utc": "2019-05-09",
+    "start_utc": "18:09:40",
+    "end_utc": "19:16:59",
+    "n_window": 4040,
+    "reference": "ALT1 antenna",
+    "match_tolerance_s": 0.5,
+    "percentages": "All 4,040 epochs; missing estimates fail thresholds",
+    "distance_statistics": "Solved epochs; no zero filling or outlier removal",
+    "p95": "NumPy linear percentile",
+    "error_3d": "hypot(horizontal, vertical)"
+  },
+  "methods": {
+    "RTKLIB": {
+      "n_window": 4040,
+      "n_solved": 4040,
+      "n_missing": 0,
+      "availability_pct": 100.0,
+      "hor_lt_1m_count": 1864,
+      "hor_lt_1p5m_count": 2393,
+      "hor_lt_1m_pct_of_window": 46.13861386138614,
+      "hor_lt_1p5m_pct_of_window": 59.23267326732673,
+      "hor_rmse_solved_m": 4.9459498483588895,
+      "hor_max_solved_m": 58.55979887355755,
+      "hor_p95_solved_m": 8.414209090433724,
+      "3d_rmse_solved_m": 10.311191085126206,
+      "3d_max_solved_m": 66.9917399807942,
+      "3d_p95_solved_m": 21.52409429361907
+    },
+    "GICI-RTK": {
+      "n_window": 4040,
+      "n_solved": 3907,
+      "n_missing": 133,
+      "availability_pct": 96.70792079207921,
+      "hor_lt_1m_count": 3135,
+      "hor_lt_1p5m_count": 3532,
+      "hor_lt_1m_pct_of_window": 77.5990099009901,
+      "hor_lt_1p5m_pct_of_window": 87.42574257425743,
+      "hor_rmse_solved_m": 4.690210847127956,
+      "hor_max_solved_m": 176.9974267907894,
+      "hor_p95_solved_m": 5.69686241050587,
+      "3d_rmse_solved_m": 7.245310758262456,
+      "3d_max_solved_m": 265.2595521288728,
+      "3d_p95_solved_m": 8.63626146225784
+    },
+    "GICI-RRR": {
+      "n_window": 4040,
+      "n_solved": 3891,
+      "n_missing": 149,
+      "availability_pct": 96.31188118811882,
+      "hor_lt_1m_count": 1961,
+      "hor_lt_1p5m_count": 2261,
+      "hor_lt_1m_pct_of_window": 48.539603960396036,
+      "hor_lt_1p5m_pct_of_window": 55.96534653465346,
+      "hor_rmse_solved_m": 92.43641280859818,
+      "hor_max_solved_m": 1122.585502288999,
+      "hor_p95_solved_m": 140.57283989669466,
+      "3d_rmse_solved_m": 92.98815048398666,
+      "3d_max_solved_m": 1122.728742462104,
+      "3d_p95_solved_m": 147.72269440326681
+    },
+    "VINS-Fusion": {
+      "n_window": 4040,
+      "n_solved": 4036,
+      "n_missing": 4,
+      "availability_pct": 99.9009900990099,
+      "hor_lt_1m_count": 1788,
+      "hor_lt_1p5m_count": 2336,
+      "hor_lt_1m_pct_of_window": 44.257425742574256,
+      "hor_lt_1p5m_pct_of_window": 57.82178217821782,
+      "hor_rmse_solved_m": 5.1041783053559255,
+      "hor_max_solved_m": 35.85769326801513,
+      "hor_p95_solved_m": 9.68172328385003,
+      "3d_rmse_solved_m": 10.479551414969366,
+      "3d_max_solved_m": 59.07468054755155,
+      "3d_p95_solved_m": 22.37986832886527
+    },
+    "IC-GVINS": {
+      "n_window": 4040,
+      "n_solved": 1502,
+      "n_missing": 2538,
+      "availability_pct": 37.17821782178218,
+      "hor_lt_1m_count": 370,
+      "hor_lt_1p5m_count": 578,
+      "hor_lt_1m_pct_of_window": 9.158415841584159,
+      "hor_lt_1p5m_pct_of_window": 14.306930693069306,
+      "hor_rmse_solved_m": 7.679764489297472,
+      "hor_max_solved_m": 30.46987821333951,
+      "hor_p95_solved_m": 21.95295773170777,
+      "3d_rmse_solved_m": 8.100021467431995,
+      "3d_max_solved_m": 30.469892831122067,
+      "3d_p95_solved_m": 21.96736569762117
+    },
+    "GVINS": {
+      "n_window": 4040,
+      "n_solved": 3664,
+      "n_missing": 376,
+      "availability_pct": 90.6930693069307,
+      "hor_lt_1m_count": 908,
+      "hor_lt_1p5m_count": 1589,
+      "hor_lt_1m_pct_of_window": 22.475247524752476,
+      "hor_lt_1p5m_pct_of_window": 39.33168316831683,
+      "hor_rmse_solved_m": 436.7029397360323,
+      "hor_max_solved_m": 19793.246852257158,
+      "hor_p95_solved_m": 28.755481889923566,
+      "3d_rmse_solved_m": 4289.513787954677,
+      "3d_max_solved_m": 229001.60598056525,
+      "3d_p95_solved_m": 75.42192269064839
+    },
+    "InGVIO": {
+      "n_window": 4040,
+      "n_solved": 3976,
+      "n_missing": 64,
+      "availability_pct": 98.41584158415841,
+      "hor_lt_1m_count": 202,
+      "hor_lt_1p5m_count": 266,
+      "hor_lt_1m_pct_of_window": 5.0,
+      "hor_lt_1p5m_pct_of_window": 6.584158415841584,
+      "hor_rmse_solved_m": 1928.5696610935722,
+      "hor_max_solved_m": 43336.34076931573,
+      "hor_p95_solved_m": 161.76664413578635,
+      "3d_rmse_solved_m": 2291.3779176432054,
+      "3d_max_solved_m": 43555.92259332529,
+      "3d_p95_solved_m": 223.53247084092473
+    },
+    "OKVIS2-X": {
+      "n_window": 4040,
+      "n_solved": 4040,
+      "n_missing": 0,
+      "availability_pct": 100.0,
+      "hor_lt_1m_count": 1264,
+      "hor_lt_1p5m_count": 1817,
+      "hor_lt_1m_pct_of_window": 31.287128712871286,
+      "hor_lt_1p5m_pct_of_window": 44.975247524752476,
+      "hor_rmse_solved_m": 19.293741788160762,
+      "hor_max_solved_m": 69.44043970859379,
+      "hor_p95_solved_m": 50.17414521915759,
+      "3d_rmse_solved_m": 30.940426190616932,
+      "3d_max_solved_m": 91.0492723801224,
+      "3d_p95_solved_m": 73.06649078612182
+    },
+    "SeA-RVINS-batch-robust": {
+      "n_window": 4040,
+      "n_solved": 4040,
+      "n_missing": 0,
+      "availability_pct": 100.0,
+      "hor_lt_1m_count": 3925,
+      "hor_lt_1p5m_count": 4025,
+      "hor_lt_1m_pct_of_window": 97.15346534653466,
+      "hor_lt_1p5m_pct_of_window": 99.62871287128714,
+      "hor_rmse_solved_m": 0.382496122106636,
+      "hor_max_solved_m": 2.907004088821422,
+      "hor_p95_solved_m": 0.8963080886311127,
+      "3d_rmse_solved_m": 1.3044891765712443,
+      "3d_max_solved_m": 5.491758790018957,
+      "3d_p95_solved_m": 2.6722841012983
+    },
+    "SeA-RVINS-latent-robust": {
+      "n_window": 4040,
+      "n_solved": 4040,
+      "n_missing": 0,
+      "availability_pct": 100.0,
+      "hor_lt_1m_count": 3885,
+      "hor_lt_1p5m_count": 4036,
+      "hor_lt_1m_pct_of_window": 96.16336633663366,
+      "hor_lt_1p5m_pct_of_window": 99.9009900990099,
+      "hor_rmse_solved_m": 0.3936283723695323,
+      "hor_max_solved_m": 1.5992567075026665,
+      "hor_p95_solved_m": 0.901756492335369,
+      "3d_rmse_solved_m": 1.4077182396467998,
+      "3d_max_solved_m": 4.0399473934464805,
+      "3d_p95_solved_m": 3.009368307423079
+    },
+    "SeA-RVINS-scalar-robust": {
+      "n_window": 4040,
+      "n_solved": 4040,
+      "n_missing": 0,
+      "availability_pct": 100.0,
+      "hor_lt_1m_count": 3919,
+      "hor_lt_1p5m_count": 4039,
+      "hor_lt_1m_pct_of_window": 97.0049504950495,
+      "hor_lt_1p5m_pct_of_window": 99.97524752475248,
+      "hor_rmse_solved_m": 0.39069052414484523,
+      "hor_max_solved_m": 1.6283380334796556,
+      "hor_p95_solved_m": 0.860873689099499,
+      "3d_rmse_solved_m": 1.7333953686369492,
+      "3d_max_solved_m": 5.849011156530483,
+      "3d_p95_solved_m": 3.3709572492819464
+    }
+  },
+  "display_names": {
+    "RTKLIB": "RTKLIB-EX",
+    "GICI-RTK": "GICI-RTK",
+    "GICI-RRR": "GICI-RRR",
+    "VINS-Fusion": "VINS-Fusion",
+    "IC-GVINS": "IC-GVINS",
+    "GVINS": "GVINS",
+    "InGVIO": "InGVIO",
+    "OKVIS2-X": "OKVIS2-X",
+    "SeA-RVINS-batch-robust": "SeA-RVINS (batch)",
+    "SeA-RVINS-latent-robust": "SeA-RVINS (latent)",
+    "SeA-RVINS-scalar-robust": "SeA-RVINS (scalar)"
+  },
+  "comparison": {
+    "methods": [
+      {
+        "id": "RTKLIB",
+        "label": "RTKLIB-EX"
+      },
+      {
+        "id": "GICI-RTK",
+        "label": "GICI-RTK"
+      },
+      {
+        "id": "GICI-RRR",
+        "label": "GICI-RRR"
+      },
+      {
+        "id": "VINS-Fusion",
+        "label": "VINS-Fusion"
+      },
+      {
+        "id": "IC-GVINS",
+        "label": "IC-GVINS"
+      },
+      {
+        "id": "GVINS",
+        "label": "GVINS"
+      },
+      {
+        "id": "InGVIO",
+        "label": "InGVIO"
+      },
+      {
+        "id": "OKVIS2-X",
+        "label": "OKVIS2-X"
+      },
+      {
+        "id": "SeA-RVINS-batch-robust",
+        "label": "SeA-RVINS (batch)"
+      },
+      {
+        "id": "SeA-RVINS-latent-robust",
+        "label": "SeA-RVINS (latent)"
+      },
+      {
+        "id": "SeA-RVINS-scalar-robust",
+        "label": "SeA-RVINS (scalar)"
+      }
+    ]
+  },
+  "statuses": {
+    "RTKLIB": "completed",
+    "GICI-RTK": "completed",
+    "GICI-RRR": "completed",
+    "VINS-Fusion": "completed",
+    "IC-GVINS": "error (pre-divergence partial)",
+    "GVINS": "completed",
+    "InGVIO": "completed",
+    "OKVIS2-X": "completed",
+    "SeA-RVINS-batch-robust": "completed",
+    "SeA-RVINS-latent-robust": "completed",
+    "SeA-RVINS-scalar-robust": "completed"
+  },
+  "table_selections": {
+    "IC-GVINS": {
+      "end_utc_exclusive": "18:35:00",
+      "reason": "Conservative pre-divergence reporting boundary; not a proven exact failure instant. Earlier recoverable errors are retained without magnitude-based filtering."
+    }
+  }
+}

@@ -1,0 +1,94 @@
+%YAML:1.0
+
+# GVINS config for TEX-CUP (2019-05-09 Austin), mono LEFT ('port') camera,
+# Lord 3DM-GX5-25 IMU, Septentrio AsteRx4 raw GNSS (converted from RINEX).
+# Native 2048x732 images with full-resolution intrinsics.
+
+#common parameters
+imu_topic: "/imu0"
+image_topic: "/cam0/image_raw"
+# run_session.py replaces this with the isolated run's absolute output path.
+output_dir: "results/GVINS/gvins_output/"
+
+#camera calibration (texcup_port-camchain.yaml, kalibr pinhole radtan, native size)
+model_type: PINHOLE
+camera_name: camera
+image_width: 2048
+image_height: 732
+distortion_parameters:
+   k1: -0.04362915
+   k2: 0.03696032
+   p1: 0.00059401
+   p2: 0.00057094
+projection_parameters:
+   fx: 1355.07090197
+   fy: 1360.08043642
+   cx: 1013.57243982
+   cy: 330.36528878
+
+gnss_enable: 1
+gnss_meas_topic: "/ublox_driver/range_meas"
+gnss_ephem_topic: "/ublox_driver/ephem"
+gnss_glo_ephem_topic: "/ublox_driver/glo_ephem"
+gnss_iono_params_topic: "/ublox_driver/iono_params"
+gnss_tp_info_topic: "/ublox_driver/time_pulse_info"
+gnss_elevation_thres: 30
+gnss_psr_std_thres: 2.0
+gnss_dopp_std_thres: 2.0
+gnss_track_num_thres: 20
+gnss_ddt_sigma: 0.1
+
+gnss_local_online_sync: 0
+local_trigger_info_topic: "/external_trigger"
+gnss_local_time_diff: 18.0     # GPST - UTC on 2019-05-09; all bag stamps are UTC
+
+# Klobuchar parameters broadcast on 2019-05-09 (brdc1290.19n ION ALPHA/BETA)
+gnss_iono_default_parameters: !!opencv-matrix
+   rows: 1
+   cols: 8
+   dt: d
+   data: [8.3819e-09, 2.2352e-08, -5.9605e-08, -1.1921e-07,
+          8.6016e+04, 6.5536e+04, -1.3107e+05, -4.5875e+05]
+
+# Camera -> IMU extrinsic documented in the root METHOD_SETUP_GUIDE.md.
+# IMU frame = RFU, matching make_rosbag.py.
+estimate_extrinsic: 1   # optimize around this initial guess
+#Rotation from camera frame to imu frame, imu^R_cam
+extrinsicRotation: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 1.0,  0.0,  0.0,
+           0.0,  0.0,  1.0,
+           0.0, -1.0,  0.0]
+#Translation from camera frame to imu frame, imu^T_cam
+extrinsicTranslation: !!opencv-matrix
+   rows: 3
+   cols: 1
+   dt: d
+   data: [-0.303, 0.011, 0.033]
+
+#feature tracker parameters
+max_cnt: 150
+min_dist: 30
+freq: 0
+F_threshold: 1.0
+show_track: 0
+equalize: 1
+fisheye: 0
+
+#optimization parameters
+max_solver_time: 0.08   # 10 Hz camera -> allow a bit more than the 0.04 example
+max_num_iterations: 8
+keyframe_parallax: 10.0
+
+#imu parameters (GVINS example defaults; Lord GX5-25 is at least this good)
+acc_n: 0.08
+gyr_n: 0.004
+acc_w: 0.00004
+gyr_w: 2.0e-6
+g_norm: 9.7935          # Austin, lat 30.29 deg
+
+#unsynchronization parameters
+estimate_td: 0
+td: 0.0

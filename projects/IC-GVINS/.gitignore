@@ -1,0 +1,15 @@
+upstream/
+catkin_ws/
+bags/
+results/*.bag
+results/*.bag.active
+results/logs/
+results/ros_home/
+results/smoke_*/
+results/make_bag.log
+results/est_untruncated.csv
+# raw run output: keep gvins.nav + extrinsic.txt, drop logs/bulk
+results/gvins_output/*
+!results/gvins_output/gvins.nav
+!results/gvins_output/extrinsic.txt
+!results/gvins_output/gvins.yaml

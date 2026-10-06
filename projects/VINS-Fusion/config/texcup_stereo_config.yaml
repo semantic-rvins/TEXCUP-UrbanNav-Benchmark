@@ -1,0 +1,72 @@
+%YAML:1.0
+
+# VINS-Fusion config for TEX-CUP (2019-05-09 Austin): stereo port(L)/star(R)
+# cameras + Lord 3DM-GX5-25 IMU (100 Hz). Native 2048x732 images.
+# IMU frame = x-right, y-fwd, z-up (raw Lord axes flipped about Y in the bag
+# builder; see the root METHOD_SETUP_GUIDE.md).
+
+imu: 1
+num_of_cam: 2
+
+imu_topic: "/imu0"
+image0_topic: "/cam0/image_raw"
+image1_topic: "/cam1/image_raw"
+# run_session.py replaces this with the isolated run's absolute output path.
+output_path: "results/vins_output/"
+
+cam0_calib: "texcup_cam0.yaml"
+cam1_calib: "texcup_cam1.yaml"
+image_width: 2048
+image_height: 732
+
+# Extrinsics.
+# body_T_cam0: nominal camera -> RFU rotation and translation
+# [-0.303, 0.011, 0.033] documented in the root METHOD_SETUP_GUIDE.md.
+# body_T_cam1 = body_T_cam0 * inv(T_cn_cnm1) with T_cn_cnm1 (= cam0->cam1) from
+# camera-calibration-stereo/texcup_stereo-camchain_ovins.yaml.
+estimate_extrinsic: 1   # optimize around this initial guess
+
+body_T_cam0: !!opencv-matrix
+   rows: 4
+   cols: 4
+   dt: d
+   data: [ 1.0,  0.0,  0.0, -0.303,
+           0.0,  0.0,  1.0,  0.011,
+           0.0, -1.0,  0.0,  0.033,
+           0.0, 0.0, 0.0, 1.0]
+
+body_T_cam1: !!opencv-matrix
+   rows: 4
+   cols: 4
+   dt: d
+   data: [ 9.998547791713e-01,  3.922622620624e-05, -1.704168505911e-02,  1.946601517749e-01,
+           1.704148871000e-02,  3.022233074425e-03,  9.998502156672e-01,  1.397294941063e-02,
+           9.072429496171e-05, -9.999954322738e-01,  3.021125709942e-03,  3.392408212856e-02,
+           0.0, 0.0, 0.0, 1.0]
+
+#Multiple thread support
+multiple_thread: 1
+
+#feature tracker parameters
+max_cnt: 150
+min_dist: 30
+freq: 10
+F_threshold: 1.0
+show_track: 0
+flow_back: 1
+
+#optimization parameters
+max_solver_time: 0.04
+max_num_iterations: 8
+keyframe_parallax: 10.0
+
+#imu parameters (same values as the GVINS TEX-CUP run; Lord GX5-25)
+acc_n: 0.08
+gyr_n: 0.004
+acc_w: 0.00004
+gyr_w: 2.0e-6
+g_norm: 9.7935          # Austin, lat 30.29 deg
+
+#unsynchronization parameters
+estimate_td: 0
+td: 0.0

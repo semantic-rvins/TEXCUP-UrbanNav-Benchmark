@@ -1,0 +1,92 @@
+%YAML:1.0
+# InGVIO estimator config for TEX-CUP (2019-05-09 Austin), mono 'port' camera,
+# Lord 3DM-GX5-25 IMU, Septentrio AsteRx4 raw GNSS (rover-only; GPS+GAL+BDS
+# pseudorange/Doppler converted from RINEX, GLONASS dropped by the converter).
+# Base: upstream config/sportsfield/ingvio_mono.yaml. This is the
+# UPSTREAM-DEFAULT algorithm: every estimator parameter equals the shipped
+# sportsfield values. Only dataset adapters differ (camera calibration path,
+# gravity for the Austin site, and the GPST->UTC time offset); see
+# BUGFIX_NOTES.md.
+
+imu_topic: "/imu0"
+feature_topic: "/mono_tracker/mono_feature"
+
+cam_nums: 1
+cam_left_file_path: "/data/HangQiu/bowu/projects/texcup-benchmarks/projects/InGVIO/config/texcup_port_mono_config.yaml"
+
+max_sliding_window_poses: 35
+is_key_frame: 1
+max_landmark_features: 0
+
+enable_gnss: 1
+
+# IMU noise (upstream defaults, identical to the values used for GVINS on
+# TEX-CUP; Lord GX5-25 datasheet noise is smaller, these are conservative)
+noise_gyro: 0.004
+noise_accel: 0.08
+noise_bias_gyro: 0.0002
+noise_bias_accel: 0.008
+noise_rcv_clockbias: 2.0
+noise_rcv_clockbias_randomwalk: 0.2
+
+init_cov_rot: 0.0
+init_cov_pos: 0.0
+init_cov_vel: 0.25
+init_cov_bg: 0.01
+init_cov_ba: 0.01
+init_cov_ext_rot: 1.8e-02
+init_cov_ext_pos: 2e-03
+init_cov_rcv_clockbias: 2.0
+init_cov_rcv_clockbias_randomwalk: 1.0
+init_cov_yof: 0.015
+
+gravity_norm: 9.7935        # Austin, lat 30.29 deg
+max_imu_buffer_size: 3000
+init_imu_buffer_sp: 300
+
+trans_thres: 0.25
+huber_epsilon: 0.01
+conv_precision: 5e-08
+init_damping: 1e-03
+outer_loop_max_iter: 10
+inner_loop_max_iter: 10
+max_depth: 60.0
+min_depth: 0.2
+max_baseline_ratio: 80.0
+
+chi2_max_dof: 150
+chi2_thres: 0.95
+visual_noise: 0.18          # upstream sportsfield default (unchanged)
+frame_select_interval: 28
+
+gnss_ephem_topic: "/ublox_driver/ephem"
+gnss_glo_ephem_topic: "/ublox_driver/glo_ephem"
+gnss_meas_topic: "/ublox_driver/range_meas"
+gnss_iono_params_topic: "/ublox_driver/iono_params"
+rtk_gt_topic: "/ublox_driver/receiver_lla"
+
+gnss_elevation_thres: 20.0
+gnss_psr_std_thres: 8.0
+gnss_dopp_std_thres: 8.0
+gnss_track_num_thres: 20
+
+# Bag timestamps are UTC unix seconds; gnss_comm obs times are GPST.
+# local = gnss + offset => offset = -(GPST-UTC) = -18 s on 2019-05-09.
+use_fix_time_offset: 1
+gnss_local_offset: -18.0
+# Upstream sportsfield defaults: per-measurement chi2 gating OFF,
+# epoch-level strong_reject ON. Note GnssUpdate.cpp:286 applies strong_reject
+# only when res.rows() <= 14 (< ~8 sats), so with GPS+GAL+BDS downtown it is a
+# no-op and this default configuration performs effectively no GNSS outlier
+# rejection there; the filter diverges at the first full stop (18:17:07).
+gnss_chi2_test: 0
+gnss_strong_reject: 1
+
+gv_align_batch_size: 45
+gv_align_max_iter: 25
+gv_align_conv_epsilon: 1e-05
+gv_align_vel_thres: 0.4
+
+psr_noise_amp: 1.0
+dopp_noise_amp: 1.0
+is_adjust_yof: 0

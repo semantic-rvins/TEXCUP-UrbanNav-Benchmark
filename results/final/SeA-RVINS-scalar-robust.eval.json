@@ -1,0 +1,18 @@
+{
+ "name": "SeA-RVINS (scalar)",
+ "cut_utc": "18:09:40",
+ "end_utc": "19:16:59",
+ "n_window": 4040,
+ "n_solved": 4040,
+ "availability_pct": 100.0,
+ "hor_lt_1m_pct_of_window": 97.0049504950495,
+ "hor_lt_1p5m_pct_of_window": 99.97524752475248,
+ "hor_rms_solved": 0.39069052414484523,
+ "hor_median_solved": 0.09273682171254401,
+ "hor_max_solved": 1.6283380334796556,
+ "ver_rms_solved": 1.6887925918701359,
+ "hor_lt_1m_pct_of_solved": 97.0049504950495,
+ "hor_lt_1p5m_pct_of_solved": 99.97524752475248,
+ "t_first": 65380.0,
+ "t_last": 69419.0
+}

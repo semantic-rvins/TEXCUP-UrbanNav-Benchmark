@@ -1,0 +1,16 @@
+<launch>
+    <arg name="cam_config_path"
+         default="$(dirname)/texcup_port_mono_config.yaml" />
+
+    <node name="mono_tracker" pkg="feature_tracker" type="mono_tracker" output="screen">
+        <param name="config_file" type="string" value="$(arg cam_config_path)" />
+    </node>
+
+    <arg name="ingvio_config_path"
+         default="$(dirname)/ingvio_mono_texcup.yaml" />
+    <node name="ingvio_estimator" pkg="ingvio_estimator" type="ingvio" output="screen">
+        <param name="config_file" type="string" value="$(arg ingvio_config_path)" />
+    </node>
+
+    <!-- headless: no rviz -->
+</launch>

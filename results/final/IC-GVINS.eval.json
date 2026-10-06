@@ -1,0 +1,18 @@
+{
+ "name": "IC-GVINS",
+ "cut_utc": "18:09:40",
+ "end_utc": "19:16:59",
+ "n_window": 4040,
+ "n_solved": 3248,
+ "availability_pct": 80.39603960396039,
+ "hor_lt_1m_pct_of_window": 9.158415841584159,
+ "hor_lt_1p5m_pct_of_window": 14.306930693069306,
+ "hor_rms_solved": 1210761.7395045904,
+ "hor_median_solved": 20046.887844111465,
+ "hor_max_solved": 3764827.190053791,
+ "ver_rms_solved": 4121195.1886001546,
+ "hor_lt_1m_pct_of_solved": 11.391625615763546,
+ "hor_lt_1p5m_pct_of_solved": 17.795566502463053,
+ "t_first": 65398.014,
+ "t_last": 68645.253
+}

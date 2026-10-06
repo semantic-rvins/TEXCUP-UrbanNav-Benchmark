@@ -1,0 +1,98 @@
+diff --git a/camera_model/CMakeLists.txt b/camera_model/CMakeLists.txt
+index d083656..ac144c9 100644
+--- a/camera_model/CMakeLists.txt
++++ b/camera_model/CMakeLists.txt
+@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
+ project(camera_model)
+ 
+ set(CMAKE_BUILD_TYPE "Release")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+ 
+ find_package(catkin REQUIRED COMPONENTS
+     roscpp
+diff --git a/feature_tracker/CMakeLists.txt b/feature_tracker/CMakeLists.txt
+index ecdd58d..4b7dff3 100644
+--- a/feature_tracker/CMakeLists.txt
++++ b/feature_tracker/CMakeLists.txt
+@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
+ project(feature_tracker)
+ 
+ set(CMAKE_BUILD_TYPE "Release")
+-set(CMAKE_CXX_FLAGS "-std=c++11")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+ 
+ find_package(catkin REQUIRED COMPONENTS
+     roscpp
+@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
+ 
+ find_package(Boost REQUIRED COMPONENTS filesystem program_options system)
+ find_package(OpenCV REQUIRED)
++find_package(Eigen3 REQUIRED)
+ 
+ 
+ add_message_files(
+@@ -37,7 +38,7 @@ catkin_package()
+ 
+ include_directories(
+     ${PROJECT_SOURCE_DIR}/include
+-    "/usr/include/eigen3"
++    ${EIGEN3_INCLUDE_DIR}
+     ${catkin_INCLUDE_DIRS}
+     ${OpenCV_INCLUDE_DIRS}
+     ${Boost_INCLUDE_DIRS}
+diff --git a/gnss_comm/CMakeLists.txt b/gnss_comm/CMakeLists.txt
+index b43cb17..0747dfc 100644
+--- a/gnss_comm/CMakeLists.txt
++++ b/gnss_comm/CMakeLists.txt
+@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
+ project(gnss_comm)
+ 
+ set(CMAKE_BUILD_TYPE "release")
+-set(CMAKE_CXX_FLAGS "-std=c++11 ")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -fPIC")
+ 
+ find_package(catkin REQUIRED COMPONENTS
+diff --git a/ingvio_estimator/CMakeLists.txt b/ingvio_estimator/CMakeLists.txt
+index d7a222a..59a3286 100644
+--- a/ingvio_estimator/CMakeLists.txt
++++ b/ingvio_estimator/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ cmake_minimum_required(VERSION 3.16)
+ project(ingvio_estimator)
+ 
+-set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+diff --git a/ingvio_estimator/cmake/ROS1.cmake b/ingvio_estimator/cmake/ROS1.cmake
+index cea20f7..2f2db5b 100644
+--- a/ingvio_estimator/cmake/ROS1.cmake
++++ b/ingvio_estimator/cmake/ROS1.cmake
+@@ -12,10 +12,11 @@ find_package(catkin QUIET COMPONENTS
+     tf_conversions
+     nav_msgs
+     gnss_comm
++    feature_tracker
+ )
+ 
+ catkin_package(
+-    CATKIN_DEPENDS roscpp roslib std_msgs message_filters sensor_msgs eigen_conversions geometry_msgs tf tf_conversions nav_msgs gnss_comm
++    CATKIN_DEPENDS roscpp roslib std_msgs message_filters sensor_msgs eigen_conversions geometry_msgs tf tf_conversions nav_msgs gnss_comm feature_tracker
+     INCLUDE_DIRS src/
+     DEPENDS OpenCV SUITESPARSE Boost
+ )
+diff --git a/ingvio_estimator/package.xml b/ingvio_estimator/package.xml
+index d196d47..07bf236 100644
+--- a/ingvio_estimator/package.xml
++++ b/ingvio_estimator/package.xml
+@@ -26,6 +26,7 @@
+     <depend condition="$ROS_VERSION == 1">tf_conversions</depend>
+     <depend condition="$ROS_VERSION == 1">nav_msgs</depend>
+     <depend condition="$ROS_VERSION == 1">gnss_comm</depend>
++    <depend condition="$ROS_VERSION == 1">feature_tracker</depend>
+       
+     <depend condition="$ROS_VERSION == 1">gtest</depend>
+     

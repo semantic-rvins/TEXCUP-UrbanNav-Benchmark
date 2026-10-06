@@ -1,0 +1,6 @@
+{
+  "IC-GVINS": {
+    "end_utc_exclusive": "18:35:00",
+    "reason": "Conservative pre-divergence reporting boundary; not a proven exact failure instant. Earlier recoverable errors are retained without magnitude-based filtering."
+  }
+}

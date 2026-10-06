@@ -1,0 +1,75 @@
+diff --git a/global_fusion/src/globalOpt.cpp b/global_fusion/src/globalOpt.cpp
+index c380794..d30ebae 100644
+--- a/global_fusion/src/globalOpt.cpp
++++ b/global_fusion/src/globalOpt.cpp
+@@ -241,6 +241,10 @@ void GlobalOptimization::optimize()
+             	}
+             }
+             updateGlobalPath();
++            printf("BENCHMARK_GLOBAL_OPTIMIZED %.9f %d %zu %d\n",
++                   globalPoseMap.rbegin()->first, length, GPSPositionMap.size(),
++                   static_cast<int>(summary.IsSolutionUsable()));
++            fflush(stdout);
+             //printf("global time %f \n", globalOptimizationTime.toc());
+             mPoseMap.unlock();
+         }
+@@ -269,4 +273,4 @@ void GlobalOptimization::updateGlobalPath()
+         pose_stamped.pose.orientation.z = iter->second[6];
+         global_path.poses.push_back(pose_stamped);
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/global_fusion/src/globalOptNode.cpp b/global_fusion/src/globalOptNode.cpp
+index 89a489d..6e93bbb 100644
+--- a/global_fusion/src/globalOptNode.cpp
++++ b/global_fusion/src/globalOptNode.cpp
+@@ -30,6 +30,7 @@ nav_msgs::Path *global_path;
+ double last_vio_t = -1;
+ std::queue<sensor_msgs::NavSatFixConstPtr> gpsQueue;
+ std::mutex m_buf;
++std::string output_csv;
+ 
+ void publish_car_model(double t, Eigen::Vector3d t_w_car, Eigen::Quaterniond q_w_car)
+ {
+@@ -113,6 +114,7 @@ void vio_callback(const nav_msgs::Odometry::ConstPtr &pose_msg)
+             //if(GPS_msg->status.status > 8)
+                 globalEstimator.inputGPS(t, latitude, longitude, altitude, pos_accuracy);
+             gpsQueue.pop();
++            ROS_INFO("BENCHMARK_GPS_ACCEPTED %.9f %.9f", t, gps_t);
+             break;
+         }
+         else if(gps_t < t - 0.01)
+@@ -143,7 +145,7 @@ void vio_callback(const nav_msgs::Odometry::ConstPtr &pose_msg)
+ 
+ 
+     // write result to file
+-    std::ofstream foutC("/home/tony-ws1/output/vio_global.csv", ios::app);
++    std::ofstream foutC(output_csv, ios::app);
+     foutC.setf(ios::fixed, ios::floatfield);
+     foutC.precision(0);
+     foutC << pose_msg->header.stamp.toSec() * 1e9 << ",";
+@@ -162,6 +164,7 @@ int main(int argc, char **argv)
+ {
+     ros::init(argc, argv, "globalEstimator");
+     ros::NodeHandle n("~");
++    n.param<std::string>("output_csv", output_csv, "vio_global.csv");
+ 
+     global_path = &globalEstimator.global_path;
+ 
+diff --git a/vins_estimator/src/estimator/estimator.cpp b/vins_estimator/src/estimator/estimator.cpp
+index 05bf448..bf00fe0 100644
+--- a/vins_estimator/src/estimator/estimator.cpp
++++ b/vins_estimator/src/estimator/estimator.cpp
+@@ -168,6 +168,11 @@ void Estimator::inputImage(double t, const cv::Mat &_img, const cv::Mat &_img1)
+     else
+         featureFrame = featureTracker.trackImage(t, _img, _img1);
+     //printf("featureTracker time: %f\n", featureTrackerTime.toc());
++    // Benchmark diagnostics: count actual tracking calls, including initialization.
++    size_t stereo_features = 0;
++    for (const auto &feature : featureFrame)
++        if (feature.second.size() > 1) ++stereo_features;
++    ROS_INFO("BENCHMARK_VINS_IMAGE %.9f %zu %zu", t, featureFrame.size(), stereo_features);
+ 
+     if (SHOW_TRACK)
+     {

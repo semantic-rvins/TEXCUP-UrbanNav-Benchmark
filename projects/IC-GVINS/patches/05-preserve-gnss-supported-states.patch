@@ -1,0 +1,25 @@
+diff --git a/ic_gvins/ic_gvins/ic_gvins.cc b/ic_gvins/ic_gvins/ic_gvins.cc
+--- a/ic_gvins/ic_gvins/ic_gvins.cc
++++ b/ic_gvins/ic_gvins/ic_gvins.cc
+@@ -773,6 +773,21 @@
+          << Logging::doubleData(unused_time_nodes_[0]);
+ 
+     for (double node : unused_time_nodes_) {
++        // A removed visual keyframe may still anchor an aligned GNSS factor.
++        // Keep that state and its preintegrations until normal marginalization
++        // removes the GNSS observation together with the state.
++        bool is_gnss_node = false;
++        for (const auto &gnss : gnsslist_) {
++            if (MISC::isTheSameTimeNode(gnss.time, node, MISC::MINIMUM_TIME_INTERVAL)) {
++                is_gnss_node = true;
++                break;
++            }
++        }
++        if (is_gnss_node) {
++            LOGI << "Retain GNSS-supported time node " << Logging::doubleData(node);
++            continue;
++        }
++
+         int index = getStateDataIndex(node);
+ 
+         // Exception

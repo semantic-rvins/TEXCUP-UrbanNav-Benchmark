@@ -1,0 +1,33 @@
+{
+  "name": "SeA-RVINS (latent)",
+  "run_dir": "results/final",
+  "cut_utc": "18:09:40",
+  "end_utc": "19:16:59",
+  "metrics": {
+    "n_window": 4040,
+    "n_solved": 4040,
+    "n_missing": 0,
+    "availability_pct": 100.0,
+    "hor_lt_1m_count": 3885,
+    "hor_lt_1p5m_count": 4036,
+    "hor_lt_1m_pct_of_window": 96.16336633663366,
+    "hor_lt_1p5m_pct_of_window": 99.9009900990099,
+    "hor_rmse_solved_m": 0.3936283723695323,
+    "hor_max_solved_m": 1.5992567075026665,
+    "hor_p95_solved_m": 0.901756492335369,
+    "3d_rmse_solved_m": 1.4077182396467998,
+    "3d_max_solved_m": 4.0399473934464805,
+    "3d_p95_solved_m": 3.009368307423079
+  },
+  "protocol": {
+    "percentage_denominator": "n_window; missing epochs fail thresholds",
+    "distance_population": "n_solved; missing errors are undefined, not zero",
+    "p95": "NumPy linear percentile of solved errors",
+    "error_3d": "hypot(horizontal, vertical)",
+    "outlier_filter": "None"
+  },
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained.",
+  "run_status": "completed",
+  "result_status": "completed",
+  "incomplete_collection": false
+}

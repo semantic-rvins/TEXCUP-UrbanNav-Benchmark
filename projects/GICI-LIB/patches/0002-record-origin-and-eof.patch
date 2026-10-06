@@ -1,0 +1,38 @@
+diff --git a/src/fusion/multisensor_single_thread_estimating.cpp b/src/fusion/multisensor_single_thread_estimating.cpp
+index 1c9ac2e..5bf57e2 100644
+--- a/src/fusion/multisensor_single_thread_estimating.cpp
++++ b/src/fusion/multisensor_single_thread_estimating.cpp
+@@ -8,6 +8,8 @@
+ **/
+ #include "gici/fusion/multisensor_single_thread_estimating.h"
+ 
++#include <iomanip>
++
+ #include "gici/imu/imu_common.h"
+ #include "gici/imu/imu_error.h"
+ #include "gici/utility/spin_control.h"
+@@ -661,6 +663,9 @@ bool MultiSensorSingleThreadEstimating::processEstimator(const EstimatorDataClus
+     Eigen::Vector3d lla = solution_.coordinate->convert(
+       position_ecef, GeoType::ECEF, GeoType::LLA);
+     estimator_->setCoordinate(solution_.coordinate);
++    // Benchmark provenance only: ESA attitude uses this fixed initial ENU frame.
++    LOG(INFO) << "BENCHMARK_ENU_ORIGIN " << std::setprecision(17)
++              << measurement.timestamp << " " << position_ecef.transpose();
+     
+     // Set gravity if needed
+     if (estimatorTypeContains(SensorType::IMU, type_)) {
+diff --git a/src/stream/files_reading.cpp b/src/stream/files_reading.cpp
+index e2011c1..94a0786 100644
+--- a/src/stream/files_reading.cpp
++++ b/src/stream/files_reading.cpp
+@@ -102,6 +102,10 @@ void FilesReading::run()
+       if (!reader->done()) quit_thread_ = false;
+     }
+   }
++  // Benchmark provenance only; leave upstream processing and shutdown unchanged.
++  bool all_done = true;
++  for (const auto& reader : file_readers_) all_done = all_done && reader->done();
++  if (all_done) LOG(INFO) << "BENCHMARK_POST_FILES_EOF";
+ }
+ 
+ }

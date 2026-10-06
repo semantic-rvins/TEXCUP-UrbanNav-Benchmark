@@ -1,0 +1,5 @@
+upstream/
+upstream-rrr/
+data_converted/
+results/**/log/
+results/**/slurm-*.out

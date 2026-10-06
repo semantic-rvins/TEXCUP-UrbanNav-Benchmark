@@ -1,0 +1,33 @@
+{
+  "name": "GICI-RTK",
+  "run_dir": "results/final",
+  "cut_utc": "18:09:40",
+  "end_utc": "19:16:59",
+  "metrics": {
+    "n_window": 4040,
+    "n_solved": 3907,
+    "n_missing": 133,
+    "availability_pct": 96.70792079207921,
+    "hor_lt_1m_count": 3135,
+    "hor_lt_1p5m_count": 3532,
+    "hor_lt_1m_pct_of_window": 77.5990099009901,
+    "hor_lt_1p5m_pct_of_window": 87.42574257425743,
+    "hor_rmse_solved_m": 4.690210847127956,
+    "hor_max_solved_m": 176.9974267907894,
+    "hor_p95_solved_m": 5.69686241050587,
+    "3d_rmse_solved_m": 7.245310758262456,
+    "3d_max_solved_m": 265.2595521288728,
+    "3d_p95_solved_m": 8.63626146225784
+  },
+  "protocol": {
+    "percentage_denominator": "n_window; missing epochs fail thresholds",
+    "distance_population": "n_solved; missing errors are undefined, not zero",
+    "p95": "NumPy linear percentile of solved errors",
+    "error_3d": "hypot(horizontal, vertical)",
+    "outlier_filter": "None"
+  },
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained.",
+  "run_status": "completed",
+  "result_status": "completed",
+  "incomplete_collection": false
+}

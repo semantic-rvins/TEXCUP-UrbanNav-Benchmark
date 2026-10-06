@@ -1,0 +1,169 @@
+{
+  "results_directory": "results/final",
+  "methods": [
+    "RTKLIB",
+    "GICI-RRR",
+    "VINS-Fusion",
+    "SeA-RVINS-batch-robust",
+    "SeA-RVINS-latent-robust",
+    "SeA-RVINS-scalar-robust"
+  ],
+  "labels": {
+    "RTKLIB": "RTKLIB-EX",
+    "GICI-RRR": "GICI-RRR",
+    "VINS-Fusion": "VINS-Fusion",
+    "SeA-RVINS-batch-robust": "SeA-RVINS (batch)",
+    "SeA-RVINS-latent-robust": "SeA-RVINS (latent)",
+    "SeA-RVINS-scalar-robust": "SeA-RVINS (scalar)"
+  },
+  "comparison": {
+    "file": "comparison.json"
+  },
+  "table_selections": {},
+  "time_panel_methods": [],
+  "excluded_no_vision_methods": [],
+  "window": {
+    "date": "2019-05-09",
+    "start_utc": "18:09:40",
+    "end_utc": "19:16:59",
+    "start_utc_sec": 65380,
+    "end_utc_sec": 69419,
+    "interval_s": 1,
+    "epochs": 4040
+  },
+  "cdf": {
+    "definition": "100 * count(finite horizontal error <= threshold) / 4040",
+    "denominator": 4040,
+    "missing_epochs": "Unavailable; remain in denominator",
+    "x_scale": "log",
+    "x_limits_m": [
+      0.01,
+      1000.0
+    ],
+    "reference_lines_m": [
+      1.0,
+      1.5
+    ],
+    "zero_error_policy": "Included in CDF at all positive thresholds",
+    "distance_filter": "None; every finite error within the reported time selection is retained"
+  },
+  "source_files": {
+    "RTKLIB": {
+      "file": "RTKLIB.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4040,
+      "full_source_solved_epochs": 4040,
+      "unavailable_epochs": 0,
+      "cdf_endpoint_pct": 100.0,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 58.55979887355755
+    },
+    "GICI-RRR": {
+      "file": "GICI-RRR.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 3891,
+      "full_source_solved_epochs": 3891,
+      "unavailable_epochs": 149,
+      "cdf_endpoint_pct": 96.31188118811882,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 1122.585502288999
+    },
+    "VINS-Fusion": {
+      "file": "VINS-Fusion.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4036,
+      "full_source_solved_epochs": 4036,
+      "unavailable_epochs": 4,
+      "cdf_endpoint_pct": 99.9009900990099,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 35.85769326801513
+    },
+    "SeA-RVINS-batch-robust": {
+      "file": "SeA-RVINS-batch-robust.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4040,
+      "full_source_solved_epochs": 4040,
+      "unavailable_epochs": 0,
+      "cdf_endpoint_pct": 100.0,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 2.907004088821422
+    },
+    "SeA-RVINS-latent-robust": {
+      "file": "SeA-RVINS-latent-robust.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4040,
+      "full_source_solved_epochs": 4040,
+      "unavailable_epochs": 0,
+      "cdf_endpoint_pct": 100.0,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 1.5992567075026665
+    },
+    "SeA-RVINS-scalar-robust": {
+      "file": "SeA-RVINS-scalar-robust.errors.csv",
+      "total_epochs": 4040,
+      "solved_epochs": 4040,
+      "full_source_solved_epochs": 4040,
+      "unavailable_epochs": 0,
+      "cdf_endpoint_pct": 100.0,
+      "zero_errors": 0,
+      "maximum_horizontal_error_m": 1.6283380334796556
+    }
+  },
+  "dependencies": {
+    "numpy": "2.5.3",
+    "matplotlib": "3.11.1"
+  },
+  "styles": {
+    "RTKLIB": {
+      "color": "#D55E00",
+      "linestyle": "-",
+      "label": "RTKLIB-EX"
+    },
+    "GICI-RRR": {
+      "color": "#56B4E9",
+      "linestyle": "-",
+      "label": "GICI-RRR"
+    },
+    "VINS-Fusion": {
+      "color": "#CC79A7",
+      "linestyle": "-",
+      "label": "VINS-Fusion"
+    },
+    "SeA-RVINS-batch-robust": {
+      "color": "#6F4E9C",
+      "linestyle": "-.",
+      "label": "SeA-RVINS (batch)"
+    },
+    "SeA-RVINS-latent-robust": {
+      "color": "#009E73",
+      "linestyle": "-",
+      "label": "SeA-RVINS (latent)"
+    },
+    "SeA-RVINS-scalar-robust": {
+      "color": "#AA8F00",
+      "linestyle": "--",
+      "label": "SeA-RVINS (scalar)"
+    }
+  },
+  "layout": {
+    "mode": "cdf_only",
+    "figure_size_inches": [
+      7.082666666666667,
+      3.0463636363636355
+    ],
+    "cdf_axes_width_inches": 6.086666666666667,
+    "cdf_axes_height_inches": 2.356363636363636,
+    "legend_location": "inside lower right",
+    "explanatory_annotations": false
+  },
+  "time_panel": null,
+  "outputs": {
+    "png": {
+      "file": "figures/fig_error_cdf_only.png"
+    },
+    "pdf": {
+      "file": "figures/fig_error_cdf_only.pdf"
+    }
+  },
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

@@ -1,0 +1,22 @@
+# Enable camera intrinsics calibration only in open-vins
+cam0:
+  cam_overlaps: [1]
+  camera_model: pinhole
+  distortion_coeffs: [-0.02918,0.03616,0.00357,-0.00408]
+  distortion_model: radtan
+  intrinsics: [1373.879,1378.680,991.935,333.389]
+  resolution: [2048, 732]
+  rostopic: /cam0/image_raw
+cam1:
+  T_cn_cnm1:
+  - [0.9998547791712777, -9.072429496170852e-05, 0.01704148871000322, -0.4976386284757827]
+  - [3.922622620624165e-05, 0.9999954322738392, 0.003022233074424807, 0.0008955716318795508]
+  - [-0.017041685059114343, -0.003021125709942124, 0.9998502156672199, 0.005505671695360818]
+  - [0.0, 0.0, 0.0, 1.0]
+  cam_overlaps: [0]
+  camera_model: pinhole
+  distortion_coeffs: [-0.03596,0.03498,0.00372,-0.00253]
+  distortion_model: radtan
+  intrinsics: [1319.512,1324.766,1021.862,345.805]
+  resolution: [2048, 732]
+  rostopic: /cam1/image_raw

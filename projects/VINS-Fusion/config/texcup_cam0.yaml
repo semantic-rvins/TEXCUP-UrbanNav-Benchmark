@@ -1,0 +1,19 @@
+%YAML:1.0
+---
+# TEX-CUP LEFT ('port') camera, from camera-calibration-stereo/texcup_stereo-camchain_ovins.yaml
+# (stereo calibration; consistent with the T_cn_cnm1 used for body_T_cam1).
+# Native 2048x732 images; full stereo-calibration intrinsics and radtan coefficients.
+model_type: PINHOLE
+camera_name: camera
+image_width: 2048
+image_height: 732
+distortion_parameters:
+   k1: -0.02918
+   k2: 0.03616
+   p1: 0.00357
+   p2: -0.00408
+projection_parameters:
+   fx: 1373.879
+   fy: 1378.680
+   cx: 991.935
+   cy: 333.389

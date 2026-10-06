@@ -1,0 +1,88 @@
+{
+  "methods": {
+    "RTKLIB": {
+      "source_run": "results/RTKLIB",
+      "trajectory_rows": 4557
+    },
+    "GVINS": {
+      "source_run": "results/GVINS/run_20260910T225733Z",
+      "trajectory_rows": 18225
+    },
+    "GICI-RTK": {
+      "source_run": "results/GICI-RTK/run_20260911T011344Z",
+      "trajectory_rows": 4424
+    },
+    "GICI-RRR": {
+      "source_run": "results/GICI-RRR/run_20260911T022530Z",
+      "trajectory_rows": 9682
+    },
+    "IC-GVINS": {
+      "source_run": "results/IC-GVINS/run_memory_fixes_20260911T223550Z",
+      "trajectory_rows": 32473,
+      "run_status": "error",
+      "result_status": "error (partial)",
+      "incomplete_collection": true,
+      "display_name": "IC-GVINS"
+    },
+    "VINS-Fusion": {
+      "source_run": "results/VINS-Fusion/run_upstream_20260911T073212Z",
+      "trajectory_rows": 20165,
+      "run_status": "completed",
+      "result_status": "completed",
+      "incomplete_collection": false
+    },
+    "SeA-RVINS-latent-robust": {
+      "source_run": "results/SeA-RVINS/converted/latent",
+      "trajectory_rows": 4101,
+      "run_status": "completed",
+      "result_status": "completed",
+      "incomplete_collection": false,
+      "display_name": "SeA-RVINS (latent)"
+    },
+    "SeA-RVINS-scalar-robust": {
+      "source_run": "results/SeA-RVINS/converted/scalar",
+      "trajectory_rows": 4101,
+      "run_status": "completed",
+      "result_status": "completed",
+      "incomplete_collection": false,
+      "display_name": "SeA-RVINS (scalar)"
+    },
+    "SeA-RVINS-batch-robust": {
+      "source_run": "results/SeA-RVINS/converted/batch",
+      "trajectory_rows": 4040,
+      "run_status": "completed",
+      "result_status": "completed",
+      "incomplete_collection": false,
+      "display_name": "SeA-RVINS (batch)"
+    },
+    "InGVIO": {
+      "source_run": "results/InGVIO/run_20260911T230052Z",
+      "trajectory_rows": 39733,
+      "run_status": "completed",
+      "result_status": "completed",
+      "incomplete_collection": false,
+      "display_name": "InGVIO"
+    },
+    "OKVIS2-X": {
+      "source_run": "results/OKVIS2-X/latest",
+      "trajectory_rows": 40372,
+      "run_status": "completed",
+      "result_status": "completed",
+      "incomplete_collection": false,
+      "display_name": "OKVIS2-X"
+    }
+  },
+  "protocol": {
+    "date_utc": "2019-05-09",
+    "start_utc": "18:09:40",
+    "end_utc": "19:16:59",
+    "n_window": 4040,
+    "reference": "ALT1 antenna",
+    "match_tolerance_s": 0.5,
+    "percentages": "All 4,040 epochs; missing estimates fail thresholds",
+    "distance_statistics": "Solved epochs; no zero filling or outlier removal",
+    "p95": "NumPy linear percentile",
+    "error_3d": "hypot(horizontal, vertical)"
+  },
+  "path_convention": "Paths within the benchmark are relative to the repository root. TEX-CUP input paths refer to data/tex_cup. Angle-bracket environment, home and temporary roots are symbolic references, not executable paths. Source run paths identify the original generated runs; those runtime directories need not be distributed with the saved results. Scientific configuration, coordinate/time rules and run status are retained."
+}

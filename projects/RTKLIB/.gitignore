@@ -1,0 +1,4 @@
+upstream/
+upstream_demo5/
+stripped/
+*.pos.stat.gz
